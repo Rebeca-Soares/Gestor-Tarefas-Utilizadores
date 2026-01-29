@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestor de Tarefas e Utilizadores</title>
+  <link rel="stylesheet" href="./dist/assets/css/tasks.css">
+  <link rel="stylesheet" href="./dist/assets/css/user.css">
+  <link rel="stylesheet" href="./dist/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+
+  <header class="header">
+    <nav class="header-nav" aria-label="Navegação principal">
+      <span class="symbol" aria-hidden="true">
+        <i class="bi bi-list-check"></i>
+        <strong class="text" id="headerTitle">Gestor de Tarefas</strong>
+      </span>
+
+      <span id="loginInfo"></span>
+
+      <ul class="nav-links">
+        <li>
+          <a href="#" id="navTasks" class="active" aria-current="page">
+            <i class="bi bi-list-stars"></i> Tarefas
+          </a>
+        </li>
+        <li>
+          <a href="#" id="navUsers">
+            <i class="bi bi-people"></i>Utilizadores
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+<!--     Tasks Section -->
+    <section id="tasksSection">
+      <div class="header-actions">
+        <div class="stats-container">
+          <div class="stat-card" id="statAll">
+            <div class="stat-info">
+              <span class="stat-label">Todas</span>
+              <span class="stat-value" id="countAll">0</span>
+            </div>
+            <i class="bi bi-list-task"></i>
+          </div>
+
+          <div class="stat-card" id="statPending">
+            <div class="stat-info">
+              <span class="stat-label">Pendentes</span>
+              <span class="stat-value" id="countPending">0</span>
+            </div>
+            <i class="bi bi-clock"></i>
+          </div>
+
+          <div class="stat-card" id="statBlocked">
+            <div class="stat-info">
+              <span class="stat-label">Bloqueadas</span>
+              <span class="stat-value" id="countBlocked">0</span>
+            </div>
+            <i class="bi bi-ban"></i>
+          </div>
+
+          <div class="stat-card" id="statExpired">
+            <div class="stat-info">
+              <span class="stat-label">Atrasadas</span>
+              <span class="stat-value" id="countExpired">0</span>
+            </div>
+            <i class="bi bi-exclamation-circle"></i>
+          </div>
+        </div>
+
+        <button id="openAddTaskModalBtn" class="btn-primary">
+          <i class="bi bi-plus-lg"> </i>  Nova Tarefa
+        </button>
+      </div>
+    
+      <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+          <span id="closeAddTaskModal" class="close">&times;</span>
+          <h2 class="modal-title">Adicionar Nova Tarefa</h2>
+          
+          <div class="form-group">
+            <label for="taskInput">Título da Tarefa:</label>
+            <input id="taskInput" type="text" placeholder="Digite o título...">
+            <span id="taskError" class="task-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="userSelect">Atribuir a:</label>
+            <select id="userSelect">
+              <option value="">Ninguém (Não atribuída)</option>
+              </select>
+          </div>
+
+          <div class="modal-row" style="display: flex; gap: 15px;">
+            <div class="form-group" style="flex: 1;">
+              <label for="categorySelect">Categoria:</label>
+              <select id="categorySelect">
+                <option value="Trabalho">Trabalho</option>
+                <option value="Pessoal">Pessoal</option>
+                <option value="Estudo">Estudo</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="flex: 1;">
+              <label for="prioritySelect">Prioridade:</label>
+              <select id="prioritySelect">
+                <option value="LOW">Baixa</option>
+                <option value="MEDIUM" selected>Média</option>
+                <option value="HIGH">Alta</option>
+                <option value="CRITICAL">Crítica</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="statusSelect">Status Inicial:</label>
+            <select id="statusSelect">
+              <option value="0">Criada</option>
+              <option value="1">Atribuída</option>
+              <option value="2" selected>Em Progresso</option>
+              <option value="3">Bloqueada</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="deadlineInput">Prazo (Deadline):</label>
+            <input type="date" id="deadlineInput">
+          </div>
+
+          <button id="addBtn" class="btn-submit">Adicionar Tarefa</button>
+        </div>
+      </div>
+
+      <div id="attachmentModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeAttachmentModal">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            <h3>Anexos da Tarefa</h3>
+            <div id="attachmentsContainer"></div>
+            <hr>
+            
+            <div class="attachment-form">
+                <div class="option-group">
+                    <label for="fileInput" class="custom-file-upload">
+                        <i class="bi bi-cloud-upload"></i> Selecionar Ficheiro
+                    </label>
+                    <input type="file" id="fileInput" style="display: none;">
+                    <span id="fileNameDisplay">Nenhum ficheiro selecionado</span>
+                </div>
+    
+                <div class="divider"><span>OU URL MANUAL</span></div>
+    
+                <div class="option-group">
+                    <input type="text" id="attachmentNameInput" placeholder="Nome do anexo (ex: Link Drive)">
+                    <input type="text" id="attachmentUrlInput" placeholder="URL (https://...)">
+                </div>
+                <span id="attachmentError" class="task-error"></span>
+                <button id="addAttachmentBtn" >Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+      <section id="filterTasks">
+        <h3>Filtrar Tarefas: </h3>
+        <input type="text" id="searchTask" placeholder="Buscar por tarefa">
+
+        <div class="dropdown">
+          <button id="categoryDropdownBtn">
+            <i class="bi bi-funnel"></i> Todas <i class="bi bi-chevron-down"></i>
+          </button>
+          <div id="categoryDropdownMenu" class="dropdown-menu">
+              <button data-category="All">Todas</button>
+              <button data-category="Trabalho">Trabalho</button>
+              <button data-category="Pessoal">Pessoal</button>
+              <button data-category="Estudo">Estudo</button>
+          </div>
+        </div>
+      
+        <button id="orderNameTask">Ordenar A-Z</button>
+        <button id="clearCompleted">
+          <i class="bi bi-trash3"></i> Limpar concluidas</button>
+      </section>
+
+      <ul id="list"></ul>
+      
+      <div id="editTaskModal" class="modal">
+        <div class="modal-content">
+          <span id="closeEditTaskModal" class="close">&times;</span>
+          <h2>Editar Tarefa</h2>
+          
+          <label for="editTaskInput">Título:</label>
+          <input id="editTaskInput" type="text">
+
+          <label for="editTaskUser">Alterar Atribuição:</label>
+          <select id="editTaskUser">
+            <option value="">Ninguém (Não atribuída)</option>
+          </select>
+          
+          <label for="editTaskCategory">Categoria:</label>
+          <select id="editTaskCategory">
+            <option value="Trabalho">Trabalho</option>
+            <option value="Pessoal">Pessoal</option>
+            <option value="Estudo">Estudo</option>
+          </select>
+      
+          <label for="editTaskPriority">Prioridade:</label>
+          <select id="editTaskPriority">
+            <option value="LOW">Baixa</option>
+            <option value="MEDIUM">Média</option>
+            <option value="HIGH">Alta</option>
+            <option value="CRITICAL">Crítica</option>
+          </select>
+      
+          <label for="editTaskStatus">Status:</label>
+          <select id="editTaskStatus">
+            <option value="0">Criada</option>
+            <option value="1">Atribuída</option>
+            <option value="2">Em Progresso</option>
+            <option value="3">Bloqueada</option>
+            <option value="4">Concluída</option>
+            <option value="5">Arquivada</option>
+          </select>
+      
+          <label for="editTaskDeadline">Prazo:</label>
+          <input type="date" id="editTaskDeadline">
+      
+          <button id="saveEditTaskBtn">Salvar Alterações</button>
+        </div>
+      </div>
+
+      <div id="commentModal" class="modal">
+        <div class="modal-content">
+          <span id="closeCommentModal" class="close">&times;</span>
+          <h2>Comentários da Tarefa</h2>
+          <div id="comentsContainer"></div>
+          <div>
+            <input type="text" id="newCommentInput" placeholder="Escreva um comentário...">
+            <button id="addCommentBtn">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Users Section -->
+    <section id="usersSection" style="display: none;">
+      <div class="users-section-header">
+        <section id="infoUsers">
+          <p>
+            <span class="info-text">Total de Utilizadores: <span id="contadorTotalUsers">0</span></span>
+            <i class="bi bi-person"></i>
+          </p>
+          <p>
+            <span class="info-text">Taxa de Atividade: <span id="contadorPercentagemUsers">0%</span></span>
+            <i class="bi bi-check-circle"></i>
+          </p>
+        </section>
+      </div>
+
+      <section id="formUser">
+        <h2>Adicionar Utilizador</h2>
+        <div class="registerUser">
+          <p>Nome Completo:</p>
+          <div class="input-group">
+            <i class="bi bi-person icon"></i>
+            <input type="text" id="name" placeholder="Nome Completo">
+          </div>
+        </div>
+
+        <div class="addUser">
+          <p>Email:</p>
+          <div class="input-group">
+            <i class="bi bi-envelope icon"></i>
+            <input type="email" id="email" placeholder="Email">
+          </div>
+        </div>
+
+        <select id="userRoleInput">
+          <option value="0">ADMIN</option>
+          <option value="1">MANAGER</option>
+          <option value="2" selected>MEMBER</option>
+          <option value="3">VIEWER</option>
+        </select>
+
+        <button id="addUserBtn">Adicionar</button>
+
+        <div class="filters">
+          <button id="filterActives" class="filterBtn">Usuarios Ativos: <span id="contadorAtivos">0</span></button>
+          <button id="filterDesactive" class="filterBtn">Usuarios Inativos: <span id="contadorDesactive">0</span></button>
+        </div>
+        <span id="information"></span>
+      </section>
+
+      <section id="filterUsers">
+        <h3>Filtrar Utilizadores: </h3>
+        <input type="text" id="searchUser" placeholder="Buscar por nome">
+        <button id="orderNameUser">Ordenar por nome A-Z</button>
+      </section>
+
+      <section class="UsersList"></section>
+      <div class="modal-overlay" id="userModal">
+        <div class="user-details-modal" id="userModalContent">
+          <button class="close-modal" id="closeUserModal">&times;</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./dist/js/main.js"></script>
+</body>
+</html>

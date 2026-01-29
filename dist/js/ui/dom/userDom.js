@@ -1,0 +1,17 @@
+export const listDiv = document.querySelector('.UsersList');
+export const nomeInput = document.getElementById('name');
+export const emailInput = document.getElementById('email');
+export const addBnt = document.getElementById('addUserBtn');
+export const info = document.getElementById('information');
+export const filterActives = document.getElementById('filterActives');
+export const filterDesactive = document.getElementById('filterDesactive');
+export const contadorDesactiveSpan = document.getElementById('contadorDesactive');
+export const contadorTotalUsers = document.getElementById('contadorTotalUsers');
+export const contadorPercentagemUsers = document.getElementById('contadorPercentagemUsers');
+export const contadorAtivos = document.getElementById('contadorAtivos');
+export const searchInputUser = document.getElementById('searchUser');
+export const orderNameUser = document.getElementById('orderNameUser');
+export const modalOverlay = document.getElementById('userModal');
+export const modalContent = document.getElementById('userModalContent');
+export const userRoleInput = document.getElementById('userRoleInput');
+export const loginInfo = document.getElementById('loginInfo');

@@ -1,0 +1,12 @@
+import { renderTasks } from './ui/components/renderTask.js';
+import { TasksList } from './services/taskService.js';
+import { TasksClass } from './models/task.js';
+import "./ui/app.js"
+import { renderUsers } from './ui/components/rederUsers.js';
+import { UserList } from './services/userService.js';
+import { UserClass } from './models/User.js';
+
+renderTasks();
+renderUsers();
+
+export { TasksList, TasksClass, UserList, UserClass };

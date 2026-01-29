@@ -1,0 +1,39 @@
+{
+    "compilerOptions": {
+        "target": "ESNext", // Para suportar ES6+ no browser
+        "lib": [
+            "ESNext",
+            "dom"
+        ], // Recursos do JS e do DOM
+        "strict": true, // Habilita checagens de tipo mais rígidas
+        "module": "esnext", // Para suportar import/export
+        "moduleResolution": "node", // Resolves módulos como node
+        "rootDir": "./src", // Pasta raiz do código-fonte
+        "outDir": "./dist/js", // Saída compilada
+        "esModuleInterop": true, // Compatibilidade com imports CJS
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true, // Evita checar bibliotecas externas
+        "baseUrl": "./src", // Facilita imports absolutos a partir de src
+        "paths": { // Permite usar aliases para pastas
+            "@models/*": [
+                "models/*"
+            ],
+            "@services/*": [
+                "services/*"
+            ],
+            "@ui/*": [
+                "ui/*"
+            ],
+            "@utils/*": [
+                "utils/*"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*"
+, "src/security", "src/notifications"    ], // Inclui todo o src
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

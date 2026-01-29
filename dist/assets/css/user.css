@@ -1,0 +1,581 @@
+
+button {
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.UsersList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.users-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+#infoUsers {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+#infoUsers p {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, var(--primary), #b967ff);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+#infoUsers i {
+  background: rgba(255,255,255,0.2);
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+#infoUsers span {
+  font-weight: bold;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+#formUser {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  margin-bottom: 1rem;
+}
+
+#formUser .input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+#formUser input {
+  border: none;
+  outline: none;
+  flex: 1;
+}
+
+#addUserBtn {
+  background-color: var(--primary);
+  color: #fff;
+  width: 100%;
+  max-width: 800px;
+  display: block;
+  margin: 0 auto;
+}
+
+#filterActives {
+  background-color: #73d5a798;
+}
+
+#filterDesactive {
+  background-color: hsla(354, 70%, 54%, 0.475);
+}
+
+#filterUsers {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+#filterUsers input {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+#filterUsers button {
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background-color: #fff;
+}
+
+#filterUsers button:hover {
+  background-color: var(--primary-soft);
+}
+
+.UsersList .userCard {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Classes para o Status no Modal */
+.status-pill {
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.status-active {
+  background-color: #73d5a798; 
+  color: #155724; 
+}
+
+.status-inactive {
+  background-color: hsla(354, 70%, 54%, 0.475); 
+  color: #721c24; 
+}
+
+.userCard .user-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userCard .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #ECECF0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #615FFF;
+  font-size: 1rem;
+}
+
+.userCard .status {
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.75rem;
+}
+
+.userCard .status.Ativo {
+  background-color: var(--success-bg);
+  color: var(--success-text);
+}
+
+.userCard .status.Inativo {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+}
+
+.userCard .card-buttons {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.userCard .toggleStateBnt {
+  flex: 1;
+  padding: 0.6rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+  background-color: #fff;
+}
+
+.userCard .toggleStateBnt:hover {
+  background-color: var(--primary-soft);
+}
+
+.userCard .removeUser {
+  flex: 0 0 40px;
+  padding: 0.3rem;
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  background-color: #fff;
+  color: var(--danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userCard .removeUser:hover {
+  background-color: #ffe5e5;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.user-details-modal {
+  background-color: #ECECF0;
+  border-radius: 12px;
+  padding: 25px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+.user-details-modal h2 {
+  margin-bottom: 15px;
+  color: var(--primary-dark);
+  font-size: 22px;
+}
+
+.user-details-modal p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #111827;
+}
+
+.user-details-modal .close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary-dark);
+}
+
+#userModal {
+  display: none;
+}
+
+#userModal.show {
+  display: flex;
+}
+
+.registerUser p,
+.addUser p {
+  margin-bottom: 20px;
+}
+
+.info-message {
+  display: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(-5px);
+}
+
+.info-error {
+  background-color: #ffe0e0;
+  color: #d8000c;
+  border: 1px solid #d8000c;
+}
+
+.info-success {
+  background-color: #e0ffe6;
+  color: #006400;
+  border: 1px solid #006400;
+}
+
+.info-show {
+  display: block !important;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#addUserBtn {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  background-color: #7f5aff;
+  color: #fff;
+  width: 100%;
+  max-width: 800px;
+  display: block;
+  margin: 0 auto;
+}
+
+.filters {
+  margin: 0 auto;
+}
+
+#filterActives {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  background-color: #73d5a798;
+}
+
+#filterDesactive {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  background-color: hsla(354, 70%, 54%, 0.475);
+}
+
+#filterActives:hover {
+  background-color: #2b8159;
+  color: white;
+}
+
+#filterDesactive:hover {
+  background-color: hsl(354, 70%, 54%);
+  color: white;
+}
+
+/* Container da lista de tarefas no modal */
+.tasks-scroll-area {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 5px;
+  margin-top: 15px;
+}
+
+/* Item individual de tarefa */
+.user-task-item {
+  border-left: 5px solid #6e8efb;
+  background-color: #f4f7ff;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+}
+
+.user-task-item strong {
+  color: #333;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.user-task-details {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+/* Texto de deadline em destaque */
+.task-deadline-info {
+  display: block;
+  margin-top: 5px;
+  color: #d9534f;
+  font-weight: 500;
+}
+
+/* Mensagem de lista vazia */
+.no-tasks-msg {
+  color: #888;
+  font-style: italic;
+}
+
+
+.btn-comment, .btn-attach {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -4px;     
+  right: -4px;   
+  width: 10px;
+  height: 10px;
+  background-color: #ef4444;
+  border: 2px solid white;   
+  border-radius: 50%;
+  z-index: 10;
+  pointer-events: none;     
+}
+
+#loginInfo {
+  color: #5aab5a; 
+  font-weight: bold;
+  font-size: 0.9rem;
+
+}
+
+.badge-role {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+}
+
+/* Cores diferentes para cada cargo */
+.role-admin { background-color: #d9534f; }    
+.role-manager { background-color: #f0ad4e; }  
+.role-member { background-color: #5bc0de; }   
+.role-viewer { background-color: #777; }   
+
+.btn-edit-role {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+.btn-edit-role:hover {
+  background-color: #495057;
+}
+
+.role-dropdown {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  min-width: 120px;
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+}
+
+.role-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.role-option:hover {
+  background: #f8f9fa;
+  color: #6e8efb;
+}
+
+.role-option.selected {
+  background: #eef2ff;
+  color: #6e8efb;
+  font-weight: bold;
+}
+
+#userRoleInput {
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 1rem;
+  color: #333;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+#userRoleInput:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.userCard .loginBtn {
+  background-color: #5A5993; 
+  color: #fff;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.userCard .loginBtn:hover {
+  background-color: #4b49d1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(97, 95, 255, 0.2);
+}
+
+.userCard .loginBtn:active {
+  transform: translateY(0);
+}
+
+.userCard .loginBtn::before {
+  content: "\F4E1"; 
+  font-family: "bootstrap-icons";
+}
+
+.action-footer {
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-edit-role {
+  height: 44px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .role-dropdown {
+      width: 80%;
+      max-width: 300px;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  .role-option {
+      padding: 18px;
+      font-size: 1.1rem; 
+      text-align: center;
+  }
+
+  .role-dropdown::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: -1;
+      width: 200vw; height: 200vh;
+      transform: translate(-50%, -50%);
+  }
+}
+
+@media(max-width: 600px) {
+  #infoUsers {
+    flex-direction: column;
+  }
+}
+
+
