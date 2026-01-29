@@ -19,7 +19,7 @@ Aplicação web de gestão de tarefas que permite:
 
 Aplicação web de gestão de Utilizadores que permite:
 - Gestão de diferentes usuários, permitindo a visualização da respetivas informações;
-- Controle de Acessos (RBAC): Sistema de permissões baseado em cargos (ADMIN, MANAGER, MEMBER, VIEWER).
+- Controle de Acessos: Sistema de permissões baseado em cargos (ADMIN, MANAGER, MEMBER, VIEWER).
 - Interface Dinâmica: O sistema esconde ou bloqueia botões de edição/eliminação dependendo do nível de acesso do utilizador logado.
 - Filtrar e atualizar Usuarios por Ativo e Inativo;
 - Funcionalidade de adicionar novo usuário;
