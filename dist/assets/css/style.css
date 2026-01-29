@@ -49,7 +49,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;  
+    padding: 0 20px; 
 }
 
 .nav-links {
@@ -105,18 +105,22 @@ a i {
 .form-group input, 
 .form-group select,
 .form-group textarea {
-    width: 100% !important; /* Força a ocupar apenas o espaço disponível */
-    box-sizing: border-box;  /* Garante que o padding não aumente o tamanho */
+    width: 100% !important; 
+    box-sizing: border-box;  
 }
 
 @media (max-width: 480px) {
     .nav-links a span {
-        display: none; /* Esconde o texto, deixa só o ícone */
+        display: none; 
     }
     
     .header-nav {
-        flex-direction: column; /* Coloca o título em cima e os links embaixo */
+        flex-direction: column; 
         align-items: center;
-        gap: 6px
+        gap: 10px;
+    }
+
+    header {
+        height: 110px;
     }
 }
