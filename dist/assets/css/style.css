@@ -101,3 +101,22 @@ a i {
     align-items: center;
     padding: 5px;
 }
+
+.form-group input, 
+.form-group select,
+.form-group textarea {
+    width: 100% !important; /* Força a ocupar apenas o espaço disponível */
+    box-sizing: border-box;  /* Garante que o padding não aumente o tamanho */
+}
+
+@media (max-width: 480px) {
+    .nav-links a span {
+        display: none; /* Esconde o texto, deixa só o ícone */
+    }
+    
+    .header-nav {
+        flex-direction: column; /* Coloca o título em cima e os links embaixo */
+        align-items: center;
+        gap: 6px
+    }
+}
