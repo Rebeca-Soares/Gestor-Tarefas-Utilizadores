@@ -5,6 +5,8 @@ import "./ui/app.js";
 import { renderUsers } from './ui/components/rederUsers.js';
 import { UserList } from './services/userService.js';
 import { UserClass } from './models/User.js';
+import { SystemConfig } from './services/SystemConfig.js';
 renderTasks();
 renderUsers();
+console.log(SystemConfig.getInfo());
 export { TasksList, TasksClass, UserList, UserClass };

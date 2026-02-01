@@ -3,12 +3,12 @@ export abstract class BaseEntity {
     public id: number; 
     protected createdAt: Date;
 
-    static totalEntities: number;
+    static totalEntities: number = 0;
     
     constructor(id: number) {
         this.id = id;
         this.createdAt = new Date();
-        BaseEntity.totalEntities;
+        BaseEntity.totalEntities += 1;
     }
 
     public getId(): number {
@@ -21,6 +21,6 @@ export abstract class BaseEntity {
 
     static getTotalEntities (): number {
         return BaseEntity.totalEntities;
-    } //aula 5
+    } 
 }
 
