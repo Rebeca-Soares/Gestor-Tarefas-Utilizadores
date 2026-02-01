@@ -41,8 +41,8 @@ export class AutomationRulesService {
     // --- REGRAS PARA UTILIZADORES ---
 
     public applyUserRules(user: UserClass): void {
-        // Regra: Se user ficar inactive → remover assignments
-        if (!user.active) {
+
+        if (!user.isActive()) {
             const taskIds = assignmentService.getTasksFromUser(user.id);
             taskIds.forEach(taskId => {
                 assignmentService.unassignUser(taskId, user.id);

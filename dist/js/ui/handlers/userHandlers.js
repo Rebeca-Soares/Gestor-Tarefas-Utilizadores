@@ -4,16 +4,20 @@ import { nomeInput, emailInput, searchInputUser, orderNameUser, userRoleInput } 
 import { searchService } from "../../services/searchService.js";
 import { renderTasks } from "../../ui/components/renderTask.js";
 import { automationRulesService } from "../../services/automationRulesService.js";
+import { BusinessRules } from "../../services/BusinessRules.js";
+import { assignmentService } from "../../services/assignmentService.js";
+import { TasksList } from "../../services/taskService.js";
+import { TaskStatus } from "../../utils/TaskStatus.js";
 let isUserSortedAsc = false;
 export function handleAddUser() {
     const nome = nomeInput.value.trim();
     const email = emailInput.value.trim();
     const role = parseInt(userRoleInput.value);
-    if (nome.length < 3) {
+    if (!BusinessRules.isValidTitle(nome)) {
         showMessage("O nome deve ter pelo menos 3 caracteres.", "error");
         return;
     }
-    if (!email.includes('@')) {
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
         showMessage("Introduza um email válido.", "error");
         return;
     }
@@ -36,7 +40,7 @@ export function handleEditRole(user, event) {
         { val: 3, label: 'VIEWER' }
     ];
     dropdown.innerHTML = roles.map(r => `
-        <div class="role-option ${user.role === r.val ? 'selected' : ''}" data-value="${r.val}">
+        <div class="role-option ${user.getRole() === r.val ? 'selected' : ''}" data-value="${r.val}">
             ${r.label}
         </div>
     `).join('');
@@ -47,15 +51,13 @@ export function handleEditRole(user, event) {
         opt.addEventListener('click', (e) => {
             e.stopPropagation();
             const newVal = parseInt(opt.dataset.value);
-            user.role = newVal;
+            user.setRole(newVal);
             renderUsers();
             renderTasks();
             dropdown.remove();
         });
     });
-    setTimeout(() => {
-        window.onclick = () => dropdown.remove();
-    }, 0);
+    window.onclick = () => dropdown.remove();
 }
 export function handleSearchUsers() {
     const query = searchInputUser.value;
@@ -70,14 +72,42 @@ export function handleOrderUsers() {
     }
     renderUsers();
 }
-export function handleToggleUserStatus(user) {
-    user.toggleState();
+function showPopoverError(targetElement, message) {
+    const container = targetElement.parentElement;
+    if (!container || container.querySelector('.popover-error'))
+        return;
+    const popover = document.createElement('span');
+    popover.className = 'popover-error';
+    popover.textContent = message;
+    container.appendChild(popover);
+    setTimeout(() => popover.remove(), 3000);
+}
+export function handleToggleUserStatus(user, event) {
+    const button = event.currentTarget;
+    if (user.isActive()) {
+        const userTaskIds = assignmentService.getTasksFromUser(user.getId());
+        const pendingTasksCount = TasksList.filter(task => userTaskIds.includes(task.id) && task.status !== TaskStatus.Completed).length;
+        if (!BusinessRules.canUserBeDeactivated(pendingTasksCount)) {
+            showPopoverError(button, "Utilizador tem tarefas pendentes!");
+            return;
+        }
+    }
+    user.toggleActive();
     automationRulesService.applyUserRules(user);
     renderUsers();
     renderTasks();
 }
-export function handleDeleteUser(id) {
-    removeUser(id);
-    renderUsers();
-    renderTasks();
+export function handleDeleteUser(id, event) {
+    const button = event.currentTarget;
+    const userTaskIds = assignmentService.getTasksFromUser(id);
+    const pendingTasksCount = TasksList.filter(task => userTaskIds.includes(task.id) && task.status !== TaskStatus.Completed).length;
+    if (!BusinessRules.canUserBeDeactivated(pendingTasksCount)) {
+        showPopoverError(button, "Impossível apagar: tem tarefas pendentes!");
+        return;
+    }
+    if (confirm("Deseja remover este utilizador permanentemente?")) {
+        removeUser(id);
+        renderUsers();
+        renderTasks();
+    }
 }

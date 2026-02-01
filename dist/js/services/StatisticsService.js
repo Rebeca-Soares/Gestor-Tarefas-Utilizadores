@@ -6,7 +6,7 @@ import { deadlineService } from "./deadlineService.js";
 export class StatisticsService {
     // --- Estatísticas de Utilizadores ---
     getTotalUsers() { return UserList.length; }
-    getActiveUsersCount() { return UserList.filter(u => u.active).length; }
+    getActiveUsersCount() { return UserList.filter(u => u.isActive()).length; }
     getActivePercentage() {
         const total = this.getTotalUsers();
         const ativos = this.getActiveUsersCount();

@@ -309,6 +309,43 @@ button {
   transform: translateY(0);
 }
 
+/* Contentor dos botões no card para alinhar o popover */
+.card-buttons {
+  position: relative; /* Essencial para que o popover absoluto se posicione aqui */
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Estilo do Popover de Erro (usado em desativar/remover) */
+.popover-error {
+  background-color: #dc3545; /* Vermelho de erro */
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  position: absolute;
+  bottom: -80%; 
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  z-index: 100;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  pointer-events: none;
+  animation: fadeInPop 0.3s ease-out;
+}
+
+.popover-error::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+}
+
+
 #addUserBtn {
   border: none;
   padding: 0.5rem 1rem;

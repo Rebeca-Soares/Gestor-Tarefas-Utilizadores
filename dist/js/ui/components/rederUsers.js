@@ -39,14 +39,16 @@ export function renderUsers(users = UserList) {
         const tasksAssigment = assignmentService.getTasksFromUser(u.id).length;
         const card = document.createElement('div');
         card.className = 'userCard';
-        const roleNome = UserRole[u.role];
+        const roleValue = u.getRole();
+        const roleNome = UserRole[roleValue];
+        const activeStatus = u.isActive() ? 'Ativo' : 'Inativo';
         card.innerHTML = `
             <div class="user-top">
                 <div class="avatar">${getInitials(u.name)}</div>
                     <div style="display: flex; gap: 5px; align-items: center;">
                         <span class="badge-role role-${roleNome.toLowerCase()}">${roleNome}</span>
-                        <div class="status ${u.active ? 'Ativo' : 'Inativo'}">
-                            ${u.active ? 'Ativo' : 'Inativo'}
+                        <div class="status ${u.isActive() ? 'Ativo' : 'Inativo'}">
+                            ${u.isActive() ? 'Ativo' : 'Inativo'}
                         </div>
                     </div>
             </div>
@@ -55,14 +57,14 @@ export function renderUsers(users = UserList) {
             <p><i class="bi bi-list-task"></i> <strong>Tarefas:</strong> ${tasksAssigment} tarefas atribuídas</p>
 
             <div class="card-buttons">
-                <button class="toggleStateBnt">${u.active ? 'Desativar' : 'Ativar'}</button>
+                <button class="toggleStateBnt">${u.isActive() ? 'Desativar' : 'Ativar'}</button>
                 <button class="removeUser"><i class="bi bi-trash3"></i></button> 
             </div>
             <div class="action-footer">
             <button class="loginBtn" style="flex: 1;">Logar</button>
             </div>
         `;
-        if (currentUser && currentUser.role === UserRole.ADMIN) {
+        if (currentUser && currentUser.getRole() === UserRole.ADMIN) {
             const footer = card.querySelector('.action-footer');
             if (footer) {
                 const btnEditRole = document.createElement('button');
@@ -88,13 +90,13 @@ export function renderUsers(users = UserList) {
         const toggleBtn = card.querySelector('.toggleStateBnt');
         toggleBtn.onclick = (e) => {
             e.stopPropagation();
-            handleToggleUserStatus(u);
+            handleToggleUserStatus(u, e); // Agora passa (user, event)
         };
         // Botão Remover Utilizador
         const deleteBtn = card.querySelector('.removeUser');
         deleteBtn.onclick = (e) => {
             e.stopPropagation();
-            handleDeleteUser(u.id);
+            handleDeleteUser(u.id, e); // Agora passa (id, event)
         };
         listDiv.appendChild(card);
     });
@@ -115,9 +117,9 @@ if (orderNameUser) {
 }
 // Filtros Rápidos (Ativos / Inativos)
 if (filterActives) {
-    filterActives.onclick = () => renderUsers(UserList.filter(u => u.active));
+    filterActives.onclick = () => renderUsers(UserList.filter(u => u.isActive()));
 }
 if (filterDesactive) {
-    filterDesactive.onclick = () => renderUsers(UserList.filter(u => !u.active));
+    filterDesactive.onclick = () => renderUsers(UserList.filter(u => !u.isActive()));
 }
 renderUsers();

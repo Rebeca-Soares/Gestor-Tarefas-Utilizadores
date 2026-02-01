@@ -19,10 +19,11 @@ import { TaskStatus } from "../../utils/TaskStatus.js";
 import { PriorityRoles } from "../../utils/priority.js";
 import { UserList } from "../../services/userService.js"; 
 import { assignmentService } from "../../services/assignmentService.js";
-import { renderUsers } from "../../ui/components/rederUsers.js";
+import { renderUsers, showMessage } from "../../ui/components/rederUsers.js";
 import { attachmentService } from "../../services/attachmentService.js";
 import { attachmentModal, attachmentsContainer, attachmentNameInput, attachmentUrlInput, addAttachmentBtn, closeAttachmentModal } from "../dom/taskDom.js";
 import { automationRulesService } from "../../services/automationRulesService.js";
+import { BusinessRules } from "../../services/BusinessRules.js";
 
 
 let taskBeingEdited: TasksClass | null = null;
@@ -35,9 +36,9 @@ function fillUserDropdown(selectElement: HTMLSelectElement): void {
     selectElement.innerHTML = '<option value="">Ninguém (Não atribuída)</option>';
     
     UserList.forEach(user => {
-        if (user.active) {
+        if (BusinessRules.canAssignTask(user.isActive())) {
             const option = document.createElement("option");
-            option.value = user.id.toString();
+            option.value = user.getId().toString();
             option.textContent = user.name;
             selectElement.appendChild(option);
         }
@@ -201,35 +202,53 @@ if (saveEditTaskBtn) {
     saveEditTaskBtn.onclick = () => {
         if (taskBeingEdited) {
             const newTitle = editTaskInput.value.trim();
-            if (newTitle.length > 0) {
-                taskBeingEdited.title = newTitle;
-                taskBeingEdited.category = editTaskCategory.value as Category;
-                
-                if (editTaskPriority) taskBeingEdited.priority = editTaskPriority.value as PriorityRoles;
-                if (editTaskStatus) taskBeingEdited.status = Number(editTaskStatus.value) as TaskStatus;
-                
-                if (editTaskDeadline && editTaskDeadline.value) {
-                    taskBeingEdited.deadline = new Date(editTaskDeadline.value);
-                } else {
-                    taskBeingEdited.deadline = undefined;
+
+            if (!BusinessRules.isValidTitle(newTitle)) {
+                const errorSpan = editTaskInput.nextElementSibling as HTMLElement;
+
+                if (errorSpan && errorSpan.classList.contains('task-error')) {
+                    errorSpan.textContent = "Mínimo 4 caracteres";
+                    errorSpan.classList.add('show'); // Classe que ativa o balão (Popover)
+                    editTaskInput.classList.add('input-error'); // Borda vermelha
+
+                    // Esconde o popover após 3 segundos
+                    setTimeout(() => {
+                        errorSpan.classList.remove('show');
+                        editTaskInput.classList.remove('input-error');
+                    }, 3000);
                 }
-                if (editTaskUser) {
-                    const newUserId = editTaskUser.value ? Number(editTaskUser.value) : null;
-                    const currentUsers = assignmentService.getUsersFromTask(taskBeingEdited.id);
-
-                    if (newUserId !== null) {
-                        const currentUsers = assignmentService.getUsersFromTask(taskBeingEdited.id);
-                        currentUsers.forEach(oldId => assignmentService.unassignUser(taskBeingEdited!.id, oldId));
-                        assignmentService.assignUser(taskBeingEdited.id, newUserId);
-                    }
-                }
-
-                automationRulesService.applyRules(taskBeingEdited);
-
-                renderTasks();
-                renderUsers();
-                closeEditModalFunc();
+                return;
             }
+
+            taskBeingEdited.title = newTitle;
+            taskBeingEdited.category = editTaskCategory.value as Category;
+            
+            if (editTaskPriority) taskBeingEdited.priority = editTaskPriority.value as PriorityRoles;
+            if (editTaskStatus) taskBeingEdited.status = Number(editTaskStatus.value) as TaskStatus;
+            
+            if (editTaskDeadline && editTaskDeadline.value) {
+                taskBeingEdited.deadline = new Date(editTaskDeadline.value);
+            } else {
+                taskBeingEdited.deadline = undefined;
+            }
+
+            const taskId = taskBeingEdited.getId();
+
+            if (editTaskUser) {
+                const newUserId = editTaskUser.value ? Number(editTaskUser.value) : null;
+                const currentUsers = assignmentService.getUsersFromTask(taskId);
+
+                if (newUserId !== null) {
+                    currentUsers.forEach(oldId => assignmentService.unassignUser(taskId, oldId));
+                    assignmentService.assignUser(taskId, newUserId);
+                }
+            }
+
+            automationRulesService.applyRules(taskBeingEdited);
+            showMessage("Tarefa atualizada com sucesso!", "success");
+            renderTasks();
+            renderUsers();
+            closeEditModalFunc();
         }
     };
 }

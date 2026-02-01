@@ -8,7 +8,7 @@ import { UserRole } from "../../security/UserRole.js";
 export function openUserModal(user) {
     const assignedTaskIds = assignmentService.getTasksFromUser(user.id);
     const userTasks = TasksList.filter(task => assignedTaskIds.includes(task.id));
-    const roleName = UserRole[user.role];
+    const roleName = UserRole[user.getRole()];
     const tasksHtml = userTasks.length > 0
         ? userTasks.map(task => {
             const deadlineRelative = deadlineService.getRelativeTime(task.deadline);
@@ -35,8 +35,8 @@ export function openUserModal(user) {
         
         <div class="modal-user-body">
             <p><i class="bi bi-envelope"></i> <strong>Email:</strong> ${user.email}</p>
-                <span class="status-pill ${user.active ? 'status-active' : 'status-inactive'}">
-                    ${user.active ? 'Ativo' : 'Inativo'}
+                <span class="status-pill ${user.isActive() ? 'status-active' : 'status-inactive'}">
+                    ${user.isActive() ? 'Ativo' : 'Inativo'}
                 </span>
                 <span class="badge-role role-${roleName.toLowerCase()}" style="margin-left: 10px;">
                     ${roleName}

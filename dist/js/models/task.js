@@ -1,6 +1,7 @@
 import { BaseEntity } from './BaseEntity.js';
 import { TaskStatus } from '../utils/TaskStatus.js';
 export class TasksClass extends BaseEntity {
+    static allTasks = [];
     title;
     category;
     completed;

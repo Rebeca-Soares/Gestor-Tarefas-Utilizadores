@@ -33,6 +33,7 @@ export const editTaskInput = document.getElementById('editTaskInput');
 export const editTaskCategory = document.getElementById('editTaskCategory');
 export const saveEditTaskBtn = document.getElementById('saveEditTaskBtn');
 export const closeModalBtn = document.getElementById('closeEditTaskModal');
+export const editTaskError = editTaskInput.nextElementSibling;
 // Seletores opcionais para edição avançada (caso queira editar prioridade no futuro)
 export const editTaskPriority = document.getElementById('editTaskPriority');
 export const editTaskStatus = document.getElementById('editTaskStatus');

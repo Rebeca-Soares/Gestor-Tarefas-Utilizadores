@@ -109,7 +109,7 @@ export function createTaskElement(task: TasksClass, onUpdate: () => void): HTMLL
     actions.append(btnComplete);
 
     // BOTÃO EDITAR
-    if (currentUser && canEditTask(currentUser.role)) {
+    if (currentUser && canEditTask(currentUser.getRole())) {
         const btnEdit = document.createElement('button');
         btnEdit.textContent = "Editar";
         btnEdit.className = "btn-edit";
@@ -118,7 +118,7 @@ export function createTaskElement(task: TasksClass, onUpdate: () => void): HTMLL
     }
 
     // BOTÃO REMOVER
-    if (currentUser && canDeleteTask(currentUser.role)) {
+    if (currentUser && canDeleteTask(currentUser.getRole())) {
         const btnDel = document.createElement('button');
         btnDel.innerHTML = '<i class="bi bi-trash3"></i>';
         btnDel.className = "btn-remove";

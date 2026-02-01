@@ -587,12 +587,17 @@
 }
 
 .task-error {
-  color: #e74c3c; 
-  font-size: 0.85rem;
-  font-weight: bold;
-  margin-top: 5px;
-  display: none; 
-  text-align: left;
+  display: none;
+  background-color: #dc3546cf;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  top: 100%; 
+  left: 0;
+  z-index: 1001;
+  white-space: nowrap;
 }
 
 .task-error.show {

@@ -5,6 +5,8 @@ import { notificationService } from "../notifications/NotificationService.js";
 import { PriorityRoles } from "../utils/priority.js";
 import { assignmentService } from "./assignmentService.js";
 import { automationRulesService } from "./automationRulesService.js";
+import { BusinessRules } from "./BusinessRules.js";
+import { IdGenerator } from "../utils/IdGenerator.js";
 export let TasksList = [
     new TasksClass(1, "Estudar TypeScript", 'Estudo', PriorityRoles.MEDIUM, TaskStatus.Created),
     new TasksClass(2, "Ir na Academia", 'Pessoal', PriorityRoles.LOW, TaskStatus.Created),
@@ -12,10 +14,10 @@ export let TasksList = [
     new TasksClass(4, "Projeto TypeScript", 'Trabalho', PriorityRoles.HIGH, TaskStatus.InProgress)
 ];
 export function addTask(title, category, priority, status, deadline) {
-    if (title.trim().length < 3) {
+    if (!BusinessRules.isValidTitle(title)) {
         throw new Error("O título deve ter pelo menos 3 caracteres.");
     }
-    const newId = TasksList.length > 0 ? Math.max(...TasksList.map(t => t.id)) + 1 : 1;
+    const newId = IdGenerator.generate();
     const newTask = new TasksClass(newId, title, category, priority, status, deadline);
     TasksList.push(newTask);
     systemHistory.addLog(`Tarefa criada: ${title} (Prioridade: ${priority}, Status: ${TaskStatus[status]})`);

@@ -1,18 +1,18 @@
 export class SystemConfig {
-    private static appName: string = 'Configuração de Sistema';
-    private static version: string = '2.1.0';
-    private static enviroment: string = 'ambiente';
+    static appName: string = 'Configuração de Sistema';
+    static version: string = '2.1.0';
+    static environment: string = 'produção';
 
     static setEnvironment (env: string):void {
-        SystemConfig.enviroment = env; 
+        this.environment = env; 
     }
 
     //metodo nativo do JS - getInfo()
-    static getInfo(): {appName: string, version: string, enviroment:string} {
+    static getInfo(): {appName: string, version: string, environment:string} {
         return {
-            appName: SystemConfig.appName,
-            version: SystemConfig.version,
-            enviroment: SystemConfig.enviroment
+            appName: this.appName,
+            version: this.version,
+            environment: this.environment
         }
     }
 } 

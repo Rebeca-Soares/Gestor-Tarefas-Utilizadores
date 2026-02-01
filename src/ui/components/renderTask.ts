@@ -50,7 +50,7 @@ export function renderTasks(tasks = taskService.getTasks()): void {
         clearCompletedBtn.onclick = handleClearCompleted;
     }
     if (openAddTaskModalBtn) {
-        const podeCriar = currentUser && canCreateTask(currentUser.role);
+        const podeCriar = currentUser && canCreateTask(currentUser.getRole());
         openAddTaskModalBtn.style.display = podeCriar ? 'block' : 'none';
     }
 }

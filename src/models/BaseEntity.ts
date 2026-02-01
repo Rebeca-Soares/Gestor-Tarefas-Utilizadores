@@ -1,4 +1,4 @@
-export abstract class BaseEntity {
+export class BaseEntity {
     
     public id: number; 
     protected createdAt: Date;

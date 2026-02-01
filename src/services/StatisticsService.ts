@@ -8,7 +8,7 @@ export class StatisticsService {
 
     // --- Estatísticas de Utilizadores ---
     getTotalUsers(): number { return UserList.length; }
-    getActiveUsersCount(): number { return UserList.filter(u => u.active).length; }
+    getActiveUsersCount(): number { return UserList.filter(u => u.isActive()).length; }
     getActivePercentage(): string {
         const total = this.getTotalUsers();
         const ativos = this.getActiveUsersCount();

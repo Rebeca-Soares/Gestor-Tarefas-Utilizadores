@@ -7,6 +7,8 @@ export type Category = 'Estudo' | 'Pessoal' | 'Trabalho';
 
 export class TasksClass extends BaseEntity implements ITask {
     
+    static allTasks: TasksClass[] = [];
+
     public title: string;
     public category: Category;
     public completed: boolean;

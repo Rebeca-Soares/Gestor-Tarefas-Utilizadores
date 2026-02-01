@@ -38,6 +38,7 @@ export const editTaskInput = document.getElementById('editTaskInput') as HTMLInp
 export const editTaskCategory = document.getElementById('editTaskCategory') as HTMLSelectElement;
 export const saveEditTaskBtn = document.getElementById('saveEditTaskBtn') as HTMLButtonElement;
 export const closeModalBtn = document.getElementById('closeEditTaskModal') as HTMLSpanElement;
+export const editTaskError = editTaskInput.nextElementSibling as HTMLSpanElement;
 
 // Seletores opcionais para edição avançada (caso queira editar prioridade no futuro)
 export const editTaskPriority = document.getElementById('editTaskPriority') as HTMLSelectElement;
