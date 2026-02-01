@@ -31,7 +31,7 @@ export function updateDashboardStats() {
     if (contadorPercentagemUsers)
         contadorPercentagemUsers.textContent = `${percentagem}%`;
 }
-export function renderUsers(users = UserList) {
+export function renderUsers(users = UserList.getAll()) {
     if (!listDiv)
         return;
     listDiv.innerHTML = '';
@@ -117,9 +117,9 @@ if (orderNameUser) {
 }
 // Filtros Rápidos (Ativos / Inativos)
 if (filterActives) {
-    filterActives.onclick = () => renderUsers(UserList.filter(u => u.isActive()));
+    filterActives.onclick = () => renderUsers(UserList.getAll().filter(u => u.isActive()));
 }
 if (filterDesactive) {
-    filterDesactive.onclick = () => renderUsers(UserList.filter(u => !u.isActive()));
+    filterDesactive.onclick = () => renderUsers(UserList.getAll().filter(u => !u.isActive()));
 }
-renderUsers();
+renderUsers(UserList.getAll());

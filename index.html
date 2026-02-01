@@ -183,7 +183,9 @@
               <button data-category="Estudo">Estudo</button>
           </div>
         </div>
-      
+        <button id="filterFavsBtn" class="btn btn-outline-warning">
+          <i class="bi bi-star-fill"></i> Favoritos
+      </button>
         <button id="orderNameTask">Ordenar A-Z</button>
         <button id="clearCompleted">
           <i class="bi bi-trash3"></i> Limpar concluidas</button>
@@ -249,6 +251,18 @@
         </div>
       </div>
     </section>
+
+    <div class="pagination-container">
+      <button id="prevPageBtn" class="btn-pagination">
+          <i class="bi bi-arrow-left"></i> Anterior
+      </button>
+      
+      <span id="pageIndicator" class="page-text">Página 1 de 1</span>
+      
+      <button id="nextPageBtn" class="btn-pagination">
+          Próximo <i class="bi bi-arrow-right"></i>
+      </button>
+  </div>
 
     <!-- Users Section -->
     <section id="usersSection" style="display: none;">

@@ -62,3 +62,8 @@ export const closeAttachmentModal = document.getElementById('closeAttachmentModa
 export const attachmentError = document.getElementById('attachmentError');
 export const fileInput = document.getElementById('fileInput');
 export const fileNameDisplay = document.getElementById('fileNameDisplay');
+export const filterFavsBtn = document.getElementById('filterFavsBtn');
+// Elementos de Paginação
+export const prevPageBtn = document.getElementById('prevPageBtn');
+export const nextPageBtn = document.getElementById('nextPageBtn');
+export const pageIndicator = document.getElementById('pageIndicator');

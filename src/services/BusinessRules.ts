@@ -12,6 +12,6 @@ export class BusinessRules {
     }
 
     static isValidTitle(title: string): boolean {
-        return title.trim().length >= 5;
+        return title.trim().length >= 3;
     }
 }

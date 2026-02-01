@@ -9,6 +9,6 @@ export class BusinessRules {
         return active;
     }
     static isValidTitle(title) {
-        return title.trim().length >= 5;
+        return title.trim().length >= 3;
     }
 }

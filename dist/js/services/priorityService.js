@@ -14,5 +14,5 @@ export function getHighPriorityTasks() {
             highPriorityIds.push(taskId);
         }
     });
-    return TasksList.filter(task => highPriorityIds.includes(task.id));
+    return TasksList.getAll().filter(task => highPriorityIds.includes(task.id));
 }

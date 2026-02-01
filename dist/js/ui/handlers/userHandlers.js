@@ -8,16 +8,20 @@ import { BusinessRules } from "../../services/BusinessRules.js";
 import { assignmentService } from "../../services/assignmentService.js";
 import { TasksList } from "../../services/taskService.js";
 import { TaskStatus } from "../../utils/TaskStatus.js";
+import { GlobalValidators } from "../../utils/GlobalValidators.js";
+import { SystemLogger } from "../../logs/SystemLogger.js";
 let isUserSortedAsc = false;
 export function handleAddUser() {
     const nome = nomeInput.value.trim();
     const email = emailInput.value.trim();
     const role = parseInt(userRoleInput.value);
     if (!BusinessRules.isValidTitle(nome)) {
+        SystemLogger.log("Nome de utilizador rejeitado por ser muito curto.");
         showMessage("O nome deve ter pelo menos 3 caracteres.", "error");
         return;
     }
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    if (!GlobalValidators.isValidEmail(email)) {
+        SystemLogger.log("Tentativa de cadastro com email inválido.");
         showMessage("Introduza um email válido.", "error");
         return;
     }
@@ -66,11 +70,12 @@ export function handleSearchUsers() {
 }
 export function handleOrderUsers() {
     isUserSortedAsc = !isUserSortedAsc;
-    UserList.sort((a, b) => isUserSortedAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
+    const listToOrder = UserList.getAll();
+    listToOrder.sort((a, b) => isUserSortedAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
     if (orderNameUser) {
         orderNameUser.textContent = isUserSortedAsc ? "Ordenar Z-A" : "Ordenar A-Z";
     }
-    renderUsers();
+    renderUsers(listToOrder);
 }
 function showPopoverError(targetElement, message) {
     const container = targetElement.parentElement;
@@ -86,7 +91,7 @@ export function handleToggleUserStatus(user, event) {
     const button = event.currentTarget;
     if (user.isActive()) {
         const userTaskIds = assignmentService.getTasksFromUser(user.getId());
-        const pendingTasksCount = TasksList.filter(task => userTaskIds.includes(task.id) && task.status !== TaskStatus.Completed).length;
+        const pendingTasksCount = TasksList.getAll().filter(task => userTaskIds.includes(task.id) && task.status !== TaskStatus.Completed).length;
         if (!BusinessRules.canUserBeDeactivated(pendingTasksCount)) {
             showPopoverError(button, "Utilizador tem tarefas pendentes!");
             return;
@@ -100,7 +105,7 @@ export function handleToggleUserStatus(user, event) {
 export function handleDeleteUser(id, event) {
     const button = event.currentTarget;
     const userTaskIds = assignmentService.getTasksFromUser(id);
-    const pendingTasksCount = TasksList.filter(task => userTaskIds.includes(task.id) && task.status !== TaskStatus.Completed).length;
+    const pendingTasksCount = TasksList.getAll().filter(task => userTaskIds.includes(task.id) && task.status !== TaskStatus.Completed).length;
     if (!BusinessRules.canUserBeDeactivated(pendingTasksCount)) {
         showPopoverError(button, "Impossível apagar: tem tarefas pendentes!");
         return;

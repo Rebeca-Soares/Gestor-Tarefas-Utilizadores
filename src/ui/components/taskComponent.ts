@@ -1,7 +1,7 @@
 // src/ui/components/taskComponent.ts
 import { TasksClass } from "../../models/task.js";
 import { formatData } from "../../utils/date.js";
-import { taskService, toggleTaskStatus } from "../../services/taskService.js";
+import { TaskFavorites, taskService, toggleTaskStatus } from "../../services/taskService.js";
 import { openEditModal, showAttachmentModal, showCommentModal } from "../modal/taskModal.js";
 import { PriorityLabels } from "../../utils/priority.js";
 import { StatusLabels, TaskStatus } from "../../utils/TaskStatus.js";
@@ -18,6 +18,8 @@ export function createTaskElement(task: TasksClass, onUpdate: () => void): HTMLL
     const li = document.createElement("li");
     li.className = 'task-item';
 
+    const isFav = TaskFavorites.exists(task);
+
     const actions = document.createElement('div'); 
     actions.className = 'actions-container';
 
@@ -30,7 +32,7 @@ export function createTaskElement(task: TasksClass, onUpdate: () => void): HTMLL
         ? `<span class="badge deadline-tag"><i class="bi bi-clock-history"></i> ${deadlineTexto}</span>` 
         : "";
 
-    const tags = tagService.getTags(task.id);
+    const tags = tagService.getTags(task);
     const tagsHTML = tags
         .filter(t => t !== task.category) 
         .map(t => `<span class="badge" >${t}</span>`)
@@ -39,7 +41,7 @@ export function createTaskElement(task: TasksClass, onUpdate: () => void): HTMLL
     const assignedIds = assignmentService.getUsersFromTask(task.id);
     let avatarHTML = '';
     if(assignedIds.length > 0) {
-        const user = UserList.find(u => u.id === assignedIds[0]);
+        const user = UserList.getAll().find(u => u.id === assignedIds[0]);
         if (user) {
             avatarHTML = `<div class="task-user-avatar" title="Atribuída a: ${user.name}">${getInitials(user.name)}</div>`;
         }
@@ -53,7 +55,12 @@ export function createTaskElement(task: TasksClass, onUpdate: () => void): HTMLL
     titleRow.classList.add('title-row');
     titleRow.innerHTML = `
         <div class="info-container">
-            <span class="task-title ${task.completed ? 'concluida' : ''}">${task.title}</span>
+            <div>
+                <button class="btn-fav" title="Favoritar">
+                    <i class="bi ${isFav ? 'bi-star-fill text-warning' : 'bi-star'}"></i>
+                </button>
+                <span class="task-title ${task.completed ? 'concluida' : ''}">${task.title}</span>
+            </div>
             <div class="badges-row">
                 <span class="badge ${task.category.toLowerCase()}">${task.category}</span>
                 ${tagsHTML}
@@ -64,6 +71,17 @@ export function createTaskElement(task: TasksClass, onUpdate: () => void): HTMLL
         </div>
         ${avatarHTML}
     `;
+
+    const btnFav = titleRow.querySelector('.btn-fav') as HTMLButtonElement;
+    btnFav.onclick = (e) => {
+        e.stopPropagation();
+        if (TaskFavorites.exists(task)) {
+            TaskFavorites.remove(task);
+        } else {
+            TaskFavorites.add(task);
+        }
+        onUpdate(); 
+    };
 
     const textContainer = document.createElement("div");
     textContainer.appendChild(titleRow);

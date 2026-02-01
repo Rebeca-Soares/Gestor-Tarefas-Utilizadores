@@ -35,7 +35,7 @@ function fillUserDropdown(selectElement: HTMLSelectElement): void {
     
     selectElement.innerHTML = '<option value="">Ninguém (Não atribuída)</option>';
     
-    UserList.forEach(user => {
+    UserList.getAll().forEach(user => {
         if (BusinessRules.canAssignTask(user.isActive())) {
             const option = document.createElement("option");
             option.value = user.getId().toString();
@@ -204,10 +204,10 @@ if (saveEditTaskBtn) {
             const newTitle = editTaskInput.value.trim();
 
             if (!BusinessRules.isValidTitle(newTitle)) {
-                const errorSpan = editTaskInput.nextElementSibling as HTMLElement;
+                const errorSpan = editTaskModal.querySelector('.task-error') as HTMLElement;
 
                 if (errorSpan && errorSpan.classList.contains('task-error')) {
-                    errorSpan.textContent = "Mínimo 4 caracteres";
+                    errorSpan.textContent = "Mínimo 3 caracteres";
                     errorSpan.classList.add('show'); // Classe que ativa o balão (Popover)
                     editTaskInput.classList.add('input-error'); // Borda vermelha
 

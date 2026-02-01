@@ -1,34 +1,47 @@
 // src/ui/components/renderTask.ts
 import { statisticsService } from "../../services/StatisticsService.js";
-import { taskService, TasksList } from "../../services/taskService.js"; 
+import { currentPage, getTotalPages, taskService, TasksList } from "../../services/taskService.js"; 
 import {
     list, contador, orderNameBtn, categoryDropdownBtn, categoryDropdownMenu, searchInput,
     clearCompletedBtn, openAddTaskModalBtn, closeAddTaskModal, addBtn,
     countAll,
     countPending,
     countBlocked,
-    countExpired
+    countExpired,
+    filterFavsBtn,
+    pageIndicator,
+    prevPageBtn,
+    nextPageBtn
 } from "../dom/taskDom.js";
 import { 
     handleAddTask, handleOrderTasks, handleSearchTasks, 
-    handleCategoryFilter, handleClearCompleted 
+    handleCategoryFilter, handleClearCompleted, 
+    handlePagination
 } from "../handlers/taskHandlers.js";
 import { createTaskElement } from "./taskComponent.js";
 import { openAddTaskModal, closeAddTaskModalFunc } from "../modal/taskModal.js";
 import { setupStatFilters } from "../handlers/taskHandlers.js"; 
 import { currentUser } from "../../services/userService.js";
 import { canCreateTask } from "../../security/permissionService.js";
+import { TasksClass } from "../../models/task.js";
+import { handleFilterFavorites } from "../handlers/taskHandlers.js";
 
-export function renderTasks(tasks = taskService.getTasks()): void {
+export function renderTasks(tasks: TasksClass[] = taskService.getTasks()): void {
     if (!list) return;
     list.innerHTML = "";
 
-    tasks.forEach(task => {
+    const allTasks = taskService.getTasks();
+    
+    const tasksToRender = (tasks.length === allTasks.length) 
+        ? taskService.getPagedTasks() 
+        : tasks;
+
+    tasksToRender.forEach(task => {
         const li = createTaskElement(task, () => renderTasks());
         list.appendChild(li);
     });
 
-    if (countAll) countAll.textContent = TasksList.length.toString();
+    if (countAll) countAll.textContent = TasksList.getAll().length.toString();
     if (countPending) countPending.textContent = statisticsService.getPendingTasksCount().toString();
     if (countBlocked) countBlocked.textContent = statisticsService.getBlockedTasksCount().toString();
     if (countExpired) countExpired.textContent = statisticsService.getExpiredTasksCount().toString();
@@ -53,6 +66,18 @@ export function renderTasks(tasks = taskService.getTasks()): void {
         const podeCriar = currentUser && canCreateTask(currentUser.getRole());
         openAddTaskModalBtn.style.display = podeCriar ? 'block' : 'none';
     }
+
+    // --- ATUALIZAÇÃO DA UI DE PAGINAÇÃO ---
+    if (pageIndicator) {
+        pageIndicator.textContent = `Página ${currentPage} de ${getTotalPages() || 1}`;
+    }
+
+    // Desativa botões se estivermos nos limites
+    if (prevPageBtn) prevPageBtn.disabled = (currentPage === 1);
+    if (nextPageBtn) nextPageBtn.disabled = (currentPage >= getTotalPages() || getTotalPages() === 0);
+
+    // --- RESTANTE DAS ESTATÍSTICAS ---
+    if (countAll) countAll.textContent = TasksList.getAll().length.toString();
 }
 
 // --- VINCULAÇÃO DE EVENTOS ---
@@ -72,6 +97,21 @@ if (searchInput) {
     };
 }
 
+if (filterFavsBtn) {
+    filterFavsBtn.onclick = () => {
+        handleFilterFavorites(filterFavsBtn);
+    };
+}
+
+if (prevPageBtn) {
+    prevPageBtn.onclick = () => handlePagination('prev');
+}
+
+if (nextPageBtn) {
+    nextPageBtn.onclick = () => handlePagination('next');
+}
+
+
 // Menu de Categorias
 if (categoryDropdownBtn && categoryDropdownMenu) {
     categoryDropdownBtn.onclick = (e) => {
@@ -82,16 +122,21 @@ if (categoryDropdownBtn && categoryDropdownMenu) {
     categoryDropdownMenu.addEventListener('click', (e) => {
         const target = e.target as HTMLButtonElement;
         const category = target.getAttribute('data-category');
+
         if (category) {
-            handleCategoryFilter(category);
+            const label = category === "All" ? "Todas" : category;
+            categoryDropdownBtn.innerHTML = `<i class="bi bi-funnel"></i> ${label} <i class="bi bi-chevron-down"></i>`;
+
+            if (category === "All") {
+                renderTasks();
+            } else {
+                handleCategoryFilter(category);
+            }
+            
             categoryDropdownMenu.style.display = 'none';
         }
     });
 }
-
-document.addEventListener('click', () => {
-    if (categoryDropdownMenu) categoryDropdownMenu.style.display = 'none';
-});
 
 
 setupStatFilters();

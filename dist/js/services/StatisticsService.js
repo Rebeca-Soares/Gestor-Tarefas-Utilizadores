@@ -5,8 +5,8 @@ import { TaskStatus } from "../utils/TaskStatus.js";
 import { deadlineService } from "./deadlineService.js";
 export class StatisticsService {
     // --- Estatísticas de Utilizadores ---
-    getTotalUsers() { return UserList.length; }
-    getActiveUsersCount() { return UserList.filter(u => u.isActive()).length; }
+    getTotalUsers() { return UserList.getAll().length; }
+    getActiveUsersCount() { return UserList.getAll().filter(u => u.isActive()).length; }
     getActivePercentage() {
         const total = this.getTotalUsers();
         const ativos = this.getActiveUsersCount();
@@ -14,16 +14,16 @@ export class StatisticsService {
     }
     // --- ESTATÍSTICAS DE TAREFAS ---
     getPendingTasksCount() {
-        return TasksList.filter(t => !t.completed).length;
+        return TasksList.getAll().filter(t => !t.completed).length;
     }
     hasCompletedTasks() {
-        return TasksList.some(t => t.completed);
+        return TasksList.getAll().some(t => t.completed);
     }
     getBlockedTasksCount() {
-        return TasksList.filter(t => t.status === TaskStatus.Blocked).length;
+        return TasksList.getAll().filter(t => t.status === TaskStatus.Blocked).length;
     }
     getExpiredTasksCount() {
-        return TasksList.filter(t => deadlineService.getRelativeTime(t.deadline) === "Atrasada").length;
+        return TasksList.getAll().filter(t => deadlineService.getRelativeTime(t.deadline) === "Atrasada").length;
     }
 }
 export const statisticsService = new StatisticsService();

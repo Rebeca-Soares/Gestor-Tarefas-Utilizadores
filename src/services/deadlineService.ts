@@ -53,7 +53,7 @@ export class DeadlineService {
     getExpiredTasks(): TasksClass[] {
         const now = this.getCurrentTimestamp();
         
-        return TasksList.filter(task => {
+        return TasksList.getAll().filter(task => {
             const taskDeadline = this.deadlines.get(task.id);
             return taskDeadline !== undefined && taskDeadline < now;
         });

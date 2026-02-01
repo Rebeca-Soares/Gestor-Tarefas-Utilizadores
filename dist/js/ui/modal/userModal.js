@@ -7,7 +7,7 @@ import { deadlineService } from "../../services/deadlineService.js";
 import { UserRole } from "../../security/UserRole.js";
 export function openUserModal(user) {
     const assignedTaskIds = assignmentService.getTasksFromUser(user.id);
-    const userTasks = TasksList.filter(task => assignedTaskIds.includes(task.id));
+    const userTasks = TasksList.getAll().filter(task => assignedTaskIds.includes(task.id));
     const roleName = UserRole[user.getRole()];
     const tasksHtml = userTasks.length > 0
         ? userTasks.map(task => {

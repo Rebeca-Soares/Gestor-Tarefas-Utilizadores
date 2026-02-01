@@ -11,7 +11,7 @@ export function openUserModal(user: UserClass): void {
 
     const assignedTaskIds = assignmentService.getTasksFromUser(user.id);
 
-    const userTasks = TasksList.filter(task => assignedTaskIds.includes(task.id));
+    const userTasks = TasksList.getAll().filter(task => assignedTaskIds.includes(task.id));
 
     const roleName = UserRole[user.getRole()];
 

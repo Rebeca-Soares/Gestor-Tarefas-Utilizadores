@@ -11,6 +11,8 @@ import { assignmentService } from "../../services/assignmentService.js";
 import { TasksClass } from "../../models/task.js";
 import { TasksList } from "../../services/taskService.js";
 import { TaskStatus } from "../../utils/TaskStatus.js";
+import { GlobalValidators } from "../../utils/GlobalValidators.js";
+import { SystemLogger } from "../../logs/SystemLogger.js";
 
 let isUserSortedAsc = false;
 
@@ -21,10 +23,12 @@ export function handleAddUser(): void {
     const role = parseInt(userRoleInput.value);
 
     if (!BusinessRules.isValidTitle(nome)) {
+        SystemLogger.log("Nome de utilizador rejeitado por ser muito curto.");
         showMessage("O nome deve ter pelo menos 3 caracteres.", "error");
         return;
     }
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    if (!GlobalValidators.isValidEmail(email)) {
+        SystemLogger.log("Tentativa de cadastro com email inválido.");
         showMessage("Introduza um email válido.", "error");
         return;
     }
@@ -84,12 +88,15 @@ export function handleSearchUsers(): void {
 
 export function handleOrderUsers(): void {
     isUserSortedAsc = !isUserSortedAsc;
-    UserList.sort((a, b) => isUserSortedAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
+
+    const listToOrder = UserList.getAll();
+    
+    listToOrder.sort((a, b) => isUserSortedAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
     
     if (orderNameUser) {
         orderNameUser.textContent = isUserSortedAsc ? "Ordenar Z-A" : "Ordenar A-Z";
     }
-    renderUsers();
+    renderUsers(listToOrder);
 }
 
 function showPopoverError(targetElement: HTMLElement, message: string) {
@@ -110,7 +117,7 @@ export function handleToggleUserStatus(user: UserClass, event: MouseEvent): void
 
         const userTaskIds = assignmentService.getTasksFromUser(user.getId());
         
-        const pendingTasksCount = TasksList.filter(task => 
+        const pendingTasksCount = TasksList.getAll().filter(task => 
             userTaskIds.includes(task.id) && task.status !== TaskStatus.Completed
         ).length;
 
@@ -129,7 +136,7 @@ export function handleToggleUserStatus(user: UserClass, event: MouseEvent): void
 export function handleDeleteUser(id: number, event: MouseEvent): void {
     const button = event.currentTarget as HTMLElement;
     const userTaskIds = assignmentService.getTasksFromUser(id);
-    const pendingTasksCount = TasksList.filter(task => 
+    const pendingTasksCount = TasksList.getAll().filter(task => 
         userTaskIds.includes(task.id) && task.status !== TaskStatus.Completed
     ).length;
 

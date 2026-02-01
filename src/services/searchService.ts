@@ -9,26 +9,25 @@ export class SearchService {
     
     searchByTitle(text: string): TasksClass[] {
         const query = text.toLowerCase().trim();
-        return TasksList.filter(task => 
+        return TasksList.getAll().filter(task => 
             task.title.toLowerCase().includes(query)
         );
     }
 
     searchByUser(userId: number): TasksClass[] {
-        return TasksList.filter(task => {
+        return TasksList.getAll().filter(task => {
             const assignedUsers = assignmentService.getUsersFromTask(task.id);
             return assignedUsers.includes(userId);
         });
     }
 
     searchByStatus(status: number): TasksClass[] {
-        return TasksList.filter(task => task.status === status);
+        return TasksList.getAll().filter(task => task.status === status);
     }
 
     globalSearch(query: string): TasksClass[] {
-        if (!query.trim()) return TasksList;
+        if (!query.trim()) return TasksList.getAll();
 
-        // Procura por título
         const resultsByTitle = this.searchByTitle(query);
         
         const statusQuery = parseInt(query);
@@ -36,7 +35,6 @@ export class SearchService {
         
         const combined = [...resultsByTitle, ...resultsByStatus];
 
-        // Remove duplicados
         return combined.filter((task, index, self) =>
             index === self.findIndex((t) => t.id === task.id)
         );
@@ -44,7 +42,7 @@ export class SearchService {
 
     searchUsersByName(query: string): UserClass[] {
         const text = query.toLowerCase().trim();
-        return UserList.filter(user => 
+        return UserList.getAll().filter(user => 
             user.name.toLowerCase().includes(text)
         );
     }

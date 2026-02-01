@@ -1,34 +1,27 @@
+import { TagManager } from "../utils/TagManager.js";
 import { TasksList } from "./taskService.js";
+import { TasksClass } from "../models/task.js";
 
 export class TagService {
     
-    private taskTags: Map<number, string[]> = new Map();
+    private manager = new TagManager<TasksClass>();
 
-    public addTag(taskId: number, tag: string): void {
-        if (!this.taskTags.has(taskId)) {
-            this.taskTags.set(taskId, []);
-        }
-        const tags = this.taskTags.get(taskId)!;
-        if (!tags.includes(tag)) {
-            tags.push(tag);
-        }
+    public addTag(task: TasksClass, tag: string): void {
+        // Agora usamos o método do manager genérico
+        this.manager.addTag(task, tag);
     }
 
-    public removeTag(taskId: number, tag: string): void {
-        if (this.taskTags.has(taskId)) {
-            const tags = this.taskTags.get(taskId)!;
-            this.taskTags.set(taskId, tags.filter(t => t !== tag));
-        }
+    public removeTag(task: TasksClass, tag: string): void {
+        this.manager.removeTag(task, tag);
     }
 
-    public getTags(taskId: number): string[] {
-        return this.taskTags.get(taskId) || [];
+    public getTags(task: TasksClass): string[] {
+        return this.manager.getTags(task);
     }
 
-    public getTasksByTag(tag: string) {
-        
-        return TasksList.filter(task => {
-            const tags = this.getTags(task.id);
+    public getTasksByTag(tag: string): TasksClass[] {
+        return TasksList.getAll().filter(task => {
+            const tags = this.getTags(task);
             return tags.includes(tag);
         });
     }

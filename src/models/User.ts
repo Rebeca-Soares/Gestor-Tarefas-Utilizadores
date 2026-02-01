@@ -10,7 +10,7 @@ export class UserClass extends BaseEntity {
 
     constructor(id: number, name: string, email: string, role: UserRole = UserRole.MEMBER) {
         super(id); 
-        this.validateEmail(email); // Validação exigida no Exercício 3
+        this.validateEmail(email);
         this._name = name;
         this._email = email;
         this._active = true; 
