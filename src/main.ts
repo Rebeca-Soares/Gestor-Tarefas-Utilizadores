@@ -25,6 +25,7 @@ import { TaskStatus } from "./utils/TaskStatus.js";
 import { UserRole } from "./security/UserRole.js";
 import { Favorites } from "./utils/Favorites.js";
 import { Paginator } from "./utils/Paginator.js";
+import { WatcherSystem } from './utils/WatcherSystem.js';
 
 
 // --- INICIALIZAÇÃO DA INTERFACE ---
@@ -100,7 +101,19 @@ function executarTestesGenerics() {
     // Favoritos de Tarefas
     const favTasks = new Favorites<TasksClass>();
     favTasks.add(task1);
-    console.log("Tarefa 1 existe nos favoritos?", favTasks.exists(task1)); // Deve ser true
+    console.log("Tarefa 1 existe nos favoritos?", favTasks.exists(task1));
+
+    const watcherSystem = new WatcherSystem<TasksClass, UserClass>();
+
+    const t1 = TasksList.getAll()[0]; 
+    const u1 = UserList.getAll()[0];
+    const u2 = UserList.getAll()[1];
+
+    watcherSystem.watch(t1, u1);
+    watcherSystem.watch(t1, u2);
+
+    console.log("Observadores da Tarefa 1:", watcherSystem.getWatchers(t1));
+    
 }
 
 function executarTestePaginador() {
