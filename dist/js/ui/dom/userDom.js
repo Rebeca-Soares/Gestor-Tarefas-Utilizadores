@@ -15,3 +15,4 @@ export const modalOverlay = document.getElementById('userModal');
 export const modalContent = document.getElementById('userModalContent');
 export const userRoleInput = document.getElementById('userRoleInput');
 export const loginInfo = document.getElementById('loginInfo');
+export const followingListDiv = document.getElementById('followingList');

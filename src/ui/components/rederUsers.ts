@@ -7,12 +7,17 @@ import {
     filterActives, filterDesactive, contadorPercentagemUsers,
     searchInputUser, orderNameUser, info 
 } from "../dom/userDom.js";
-import { handleAddUser, handleSearchUsers, handleOrderUsers, handleDeleteUser, handleToggleUserStatus, handleEditRole } from "../handlers/userHandlers.js";
+import { handleAddUser, handleSearchUsers, handleOrderUsers, handleDeleteUser, handleToggleUserStatus, handleEditRole, showPopoverError } from "../handlers/userHandlers.js";
 import { statisticsService } from "../../services/StatisticsService.js";
 import { assignmentService } from "../../services/assignmentService.js";
 import { renderTasks } from "./renderTask.js";
 import { UserRole } from "../../security/UserRole.js";
+import { WatcherSystem } from "../../utils/WatcherSystem.js";
+import { followingListDiv } from "../dom/userDom.js";
+import { UserClass } from "../../models/User.js";
 
+
+const userWatcher = new WatcherSystem<UserClass, UserClass>();
 
 export function showMessage(message: string, type: 'error' | 'success') {
     if (info) {
@@ -24,19 +29,6 @@ export function showMessage(message: string, type: 'error' | 'success') {
             info.classList.remove('info-show');
         }, 3000);
     }
-}
-
-
-export function updateDashboardStats(): void {
-    const total = statisticsService.getTotalUsers();
-    const ativos = statisticsService.getActiveUsersCount();
-    const inativos = total - ativos;
-    const percentagem = statisticsService.getActivePercentage();
-
-    if (contadorTotalUsers) contadorTotalUsers.textContent = total.toString();
-    if (contadorAtivos) contadorAtivos.textContent = ativos.toString();
-    if (contadorDesactiveSpan) contadorDesactiveSpan.textContent = inativos.toString();
-    if (contadorPercentagemUsers) contadorPercentagemUsers.textContent = `${percentagem}%`;
 }
 
 export function renderUsers(users = UserList.getAll()): void {
@@ -51,74 +43,91 @@ export function renderUsers(users = UserList.getAll()): void {
         const roleValue = u.getRole();
         const roleNome = UserRole[roleValue];
 
-        const activeStatus = u.isActive() ? 'Ativo' : 'Inativo';
+        const follower = currentUser;
 
-        
+        const isFollowing = follower ? userWatcher.getWatchers(u).includes(follower) : false;
+        const isLogged = currentUser && currentUser.id === u.id;
+
         card.innerHTML = `
             <div class="user-top">
                 <div class="avatar">${getInitials(u.name)}</div>
-                    <div style="display: flex; gap: 5px; align-items: center;">
-                        <span class="badge-role role-${roleNome.toLowerCase()}">${roleNome}</span>
-                        <div class="status ${u.isActive() ? 'Ativo' : 'Inativo'}">
-                            ${u.isActive() ? 'Ativo' : 'Inativo'}
-                        </div>
-                    </div>
+                <div style="display: flex; gap: 5px; align-items: center;">
+                    <span class="badge-role role-${roleNome.toLowerCase()}">${roleNome}</span>
+                    <div class="status ${u.isActive() ? 'Ativo' : 'Inativo'}">${u.isActive() ? 'Ativo' : 'Inativo'}</div>
+                </div>
             </div>
             <p><i class="bi bi-person"></i> <strong>Nome:</strong> ${u.name}</p>
             <p><i class="bi bi-envelope"></i> <strong>Email:</strong> ${u.email}</p>
             <p><i class="bi bi-list-task"></i> <strong>Tarefas:</strong> ${tasksAssigment} tarefas atribuídas</p>
-
             <div class="card-buttons">
                 <button class="toggleStateBnt">${u.isActive() ? 'Desativar' : 'Ativar'}</button>
                 <button class="removeUser"><i class="bi bi-trash3"></i></button> 
             </div>
             <div class="action-footer">
-            <button class="loginBtn" style="flex: 1;">Logar</button>
+                <button class="loginBtn ${isLogged ? 'logged' : ''}" style="flex: 1;">
+                    ${isLogged ? '<i class="bi bi-box-arrow-left"></i> Deslogar' : 'Logar'}
+                </button>
             </div>
         `;
 
-        if (currentUser && currentUser.getRole() === UserRole.ADMIN) {
-            const footer = card.querySelector('.action-footer');
-            if (footer) {
-                const btnEditRole = document.createElement('button');
-                btnEditRole.innerHTML = '<i class="bi bi-shield-lock"></i>';
-                btnEditRole.className = 'btn-edit-role'; 
-                btnEditRole.title = "Alterar Cargo";
-                btnEditRole.onclick = (e) => {
-                    e.stopPropagation();
-                    handleEditRole(u, e); 
-                };
-                footer.appendChild(btnEditRole);
-            }
-        }
+        // --- LÓGICA DO WATCHER (DENTRO DO FOREACH) ---
 
-        card.onclick = () => openUserModal(u);
+        const btnFollow = document.createElement('button');
+        btnFollow.className = `btn-follow ${isFollowing ? 'active' : ''}`;
+        btnFollow.innerHTML = isFollowing 
+            ? '<i class="bi bi-person-check-fill"></i> Seguindo' 
+            : '<i class="bi bi-person-plus"></i> Seguir';
+
+        btnFollow.onclick = (e) => {
+            e.stopPropagation();
+            if (!follower) {
+                showPopoverError(btnFollow, "Operação negada: Não podes seguir o teu próprio perfil.");
+                return;
+            }
+        
+            if (u.id === follower.id) {
+                showPopoverError(btnFollow, "Não podes seguir o teu próprio perfil.");
+                return;
+            }
+
+            if (isFollowing) {
+                userWatcher.unwatch(u, follower);
+            } else {
+                userWatcher.watch(u, follower);
+            }
+            renderUsers(); 
+            updateFollowingList();
+        };
+
+        const buttonsContainer = card.querySelector('.card-buttons');
+        if (buttonsContainer) buttonsContainer.appendChild(btnFollow);
+
 
         const loginBtn = card.querySelector('.loginBtn') as HTMLButtonElement;
         loginBtn.onclick = (e) => {
             e.stopPropagation();
-            loginAs(u);
-            renderTasks();
+            
+            if (isLogged) {
+                loginAs(null as any); 
+            } else {
+                loginAs(u);
+            }
+            
+            renderTasks(); 
             renderUsers(); 
         };
 
-        // Botão Alternar Estado (Ativo/Inativo)
         const toggleBtn = card.querySelector('.toggleStateBnt') as HTMLButtonElement;
-        toggleBtn.onclick = (e: MouseEvent) => { 
-            e.stopPropagation(); 
-            handleToggleUserStatus(u, e); // Agora passa (user, event)
-        };
+        toggleBtn.onclick = (e: MouseEvent) => { e.stopPropagation(); handleToggleUserStatus(u, e); };
 
-// Botão Remover Utilizador
         const deleteBtn = card.querySelector('.removeUser') as HTMLButtonElement;
-        deleteBtn.onclick = (e: MouseEvent) => { 
-            e.stopPropagation(); 
-            handleDeleteUser(u.id, e); // Agora passa (id, event)
-        };
+        deleteBtn.onclick = (e: MouseEvent) => { e.stopPropagation(); handleDeleteUser(u.id, e); };
 
-        listDiv.appendChild(card);
-});
-    updateDashboardStats();
+        card.onclick = () => openUserModal(u);
+        listDiv.appendChild(card); // Adiciona o card completo à lista
+    });
+
+    updateFollowingList(); // Mantém o topo atualizado
 }
 
 // --- VINCULAÇÃO DE EVENTOS AOS HANDLERS ---
@@ -145,6 +154,31 @@ if (filterActives) {
 
 if (filterDesactive) {
     filterDesactive.onclick = () => renderUsers(UserList.getAll().filter(u => !u.isActive()));
+}
+
+function updateFollowingList(): void {
+    if (!followingListDiv) return;
+    
+    if (!currentUser) {
+        followingListDiv.innerHTML = '<span style="color: #888; font-size: 0.8rem;">Faz login para ver quem segues.</span>';
+        return;
+    }
+
+    const seguidos = UserList.getAll().filter(u => 
+        userWatcher.getWatchers(u).includes(currentUser as UserClass)
+    );
+    
+    if (seguidos.length === 0) {
+        followingListDiv.innerHTML = '<span>Ainda não segues ninguém.</span>';
+    } else {
+        followingListDiv.innerHTML = '';
+        seguidos.forEach(s => {
+            const span = document.createElement('span');
+            span.className = 'mini-badge-follow';
+            span.textContent = s.name;
+            followingListDiv.appendChild(span);
+        });
+    }
 }
 
 renderUsers(UserList.getAll());

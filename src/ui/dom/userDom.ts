@@ -16,3 +16,4 @@ export const modalContent = document.getElementById('userModalContent') as HTMLD
 
 export const userRoleInput = document.getElementById('userRoleInput') as HTMLSelectElement;
 export const loginInfo = document.getElementById('loginInfo') as HTMLElement;
+export const followingListDiv = document.getElementById('followingList') as HTMLDivElement;

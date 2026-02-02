@@ -77,7 +77,7 @@ export function handleOrderUsers() {
     }
     renderUsers(listToOrder);
 }
-function showPopoverError(targetElement, message) {
+export function showPopoverError(targetElement, message) {
     const container = targetElement.parentElement;
     if (!container || container.querySelector('.popover-error'))
         return;

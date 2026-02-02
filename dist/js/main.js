@@ -23,6 +23,7 @@ import { UserRole } from "./security/UserRole.js";
 import { Favorites } from "./utils/Favorites.js";
 import { Paginator } from "./utils/Paginator.js";
 import { WatcherSystem } from './utils/WatcherSystem.js';
+import { PriorityManager } from './utils/PriorityManager.js';
 // --- INICIALIZAÇÃO DA INTERFACE ---
 renderTasks();
 renderUsers();
@@ -87,9 +88,19 @@ function executarTestesGenerics() {
     watcherSystem.watch(t1, u1);
     watcherSystem.watch(t1, u2);
     console.log("Observadores da Tarefa 1:", watcherSystem.getWatchers(t1));
+    console.log("\n=== TESTE: EXERCÍCIO A3 - PRIORITY MANAGER ===");
+    const taskPriority = new PriorityManager();
+    const t2 = TasksList.getAll()[0];
+    const t3 = TasksList.getAll()[1];
+    if (t2 && t3) {
+        taskPriority.setPriority(t2, 5);
+        taskPriority.setPriority(t3, 1);
+        console.log(`Prioridade da tarefa "${t2.title}":`, taskPriority.getPriority(t2));
+        console.log("Todas as prioridades:", taskPriority.getAll());
+    }
 }
 function executarTestePaginador() {
-    console.log("\n=== EXERCÍCIO 4: PAGINADOR GENÉRICO ===");
+    console.log("\n=== EXERCÍCIO 4: PAGINADOR GENÉRICO - Exercicios Guiados ===");
     const paginator = new Paginator();
     // Teste Obrigatório com UserList (importada do userService)
     const page1 = paginator.paginate(UserList.getAll(), 1, 2);

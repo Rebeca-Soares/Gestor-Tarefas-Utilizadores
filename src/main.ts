@@ -28,6 +28,7 @@ import { Paginator } from "./utils/Paginator.js";
 import { WatcherSystem } from './utils/WatcherSystem.js';
 
 
+
 // --- INICIALIZAÇÃO DA INTERFACE ---
 renderTasks(); 
 renderUsers();
@@ -113,11 +114,11 @@ function executarTestesGenerics() {
     watcherSystem.watch(t1, u2);
 
     console.log("Observadores da Tarefa 1:", watcherSystem.getWatchers(t1));
-    
+
 }
 
 function executarTestePaginador() {
-    console.log("\n=== EXERCÍCIO 4: PAGINADOR GENÉRICO ===");
+    console.log("\n=== EXERCÍCIO 4: PAGINADOR GENÉRICO - Exercicios Guiados ===");
 
     const paginator = new Paginator();
     

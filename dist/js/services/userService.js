@@ -7,7 +7,7 @@ export const UserList = new EntityList();
 const userCache = new SimpleCache();
 function registerUser(user) {
     UserList.add(user);
-    userCache.set(user.id, user); // Armazena na cache
+    userCache.set(user.id, user);
 }
 registerUser(new UserClass(IdGenerator.generate(), 'Rebeca Cerqueira', 'rsc@gmail.com', UserRole.ADMIN));
 registerUser(new UserClass(IdGenerator.generate(), 'Ana Garcia', 'acg@gmail.com', UserRole.VIEWER));

@@ -569,6 +569,11 @@ button {
   font-family: "bootstrap-icons";
 }
 
+.loginBtn.logged {
+  background-color: var(--success-text) !important; 
+  color: white;
+}
+
 .action-footer {
   border-top: 1px solid #eee;
   padding-top: 15px;
@@ -583,6 +588,19 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.btn-follow {
+  background-color: #f0f0ff;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  border-radius: 20px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+.btn-follow.active {
+  background-color: var(--primary);
+  color: white;
 }
 
 @media (max-width: 600px) {

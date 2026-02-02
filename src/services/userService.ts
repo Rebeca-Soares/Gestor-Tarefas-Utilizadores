@@ -10,7 +10,7 @@ const userCache = new SimpleCache<number, UserClass>();
 
 function registerUser(user: UserClass): void {
     UserList.add(user);
-    userCache.set(user.id, user); // Armazena na cache
+    userCache.set(user.id, user); 
 }
 
 registerUser(new UserClass(IdGenerator.generate(), 'Rebeca Cerqueira', 'rsc@gmail.com', UserRole.ADMIN));
