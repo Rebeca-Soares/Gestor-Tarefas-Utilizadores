@@ -7,7 +7,6 @@ export class TagService {
     private manager = new TagManager<TasksClass>();
 
     public addTag(task: TasksClass, tag: string): void {
-        // Agora usamos o método do manager genérico
         this.manager.addTag(task, tag);
     }
 

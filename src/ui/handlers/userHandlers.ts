@@ -8,7 +8,6 @@ import { UserClass } from "../../models/User.js";
 import { UserRole } from "../../security/UserRole.js";
 import { BusinessRules } from "../../services/BusinessRules.js";
 import { assignmentService } from "../../services/assignmentService.js";
-import { TasksClass } from "../../models/task.js";
 import { TasksList } from "../../services/taskService.js";
 import { TaskStatus } from "../../utils/TaskStatus.js";
 import { GlobalValidators } from "../../utils/GlobalValidators.js";

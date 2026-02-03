@@ -16,12 +16,11 @@ export const navTasks = document.getElementById("navTasks") as HTMLElement;
 export const tasksSection = document.getElementById("tasksSection") as HTMLElement;
 export const headerTitle = document.getElementById('headerTitle') as HTMLElement;
 
-// --- MODAL: ADICIONAR NOVA TAREFA (O que você está criando agora) ---
-/** O contentor principal do modal de criação */
+
 export const addTaskModal = document.getElementById('addTaskModal') as HTMLDivElement;
-/** Botão na página principal que abre este modal */
+
 export const openAddTaskModalBtn = document.getElementById('openAddTaskModalBtn') as HTMLButtonElement;
-/** O "X" ou botão de fechar dentro do modal de criação */
+
 export const closeAddTaskModal = document.getElementById('closeAddTaskModal') as HTMLSpanElement;
 
 /** Campos do formulário dentro do modal de criação */
@@ -32,7 +31,7 @@ export const statusSelect = document.getElementById('statusSelect') as HTMLSelec
 export const deadlineInput = document.getElementById('deadlineInput') as HTMLInputElement;
 export const addBtn = document.getElementById("addBtn") as HTMLButtonElement;
 
-// --- MODAL: EDIÇÃO DE TAREFA (A versão que você já tinha) ---
+// --- MODAL: EDIÇÃO DE TAREFA ---
 export const editTaskModal = document.getElementById('editTaskModal') as HTMLDivElement;
 export const editTaskInput = document.getElementById('editTaskInput') as HTMLInputElement;
 export const editTaskCategory = document.getElementById('editTaskCategory') as HTMLSelectElement;
@@ -40,7 +39,7 @@ export const saveEditTaskBtn = document.getElementById('saveEditTaskBtn') as HTM
 export const closeModalBtn = document.getElementById('closeEditTaskModal') as HTMLSpanElement;
 export const editTaskError = editTaskInput.nextElementSibling as HTMLSpanElement;
 
-// Seletores opcionais para edição avançada (caso queira editar prioridade no futuro)
+// Seletores opcionais para edição 
 export const editTaskPriority = document.getElementById('editTaskPriority') as HTMLSelectElement;
 export const editTaskStatus = document.getElementById('editTaskStatus') as HTMLSelectElement;
 export const editTaskDeadline = document.getElementById('editTaskDeadline') as HTMLInputElement;
@@ -52,7 +51,7 @@ export const closeCommentModal = document.getElementById('closeCommentModal') as
 export const addCommentBtn = document.getElementById('addCommentBtn') as HTMLButtonElement;
 export const newCommentInput = document.getElementById('newCommentInput') as HTMLInputElement;
 
-// Adicione ao seu src/ui/dom/taskDom.ts
+
 export const countAll = document.getElementById("countAll") as HTMLSpanElement;
 export const countPending = document.getElementById("countPending") as HTMLSpanElement;
 export const countBlocked = document.getElementById("countBlocked") as HTMLSpanElement;

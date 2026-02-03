@@ -1,4 +1,3 @@
-// src/services/commentService.ts
 import { Comment } from "../models/Comment.js";
 
 export class CommentService {

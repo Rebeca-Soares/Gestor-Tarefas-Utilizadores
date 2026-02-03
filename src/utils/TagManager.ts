@@ -9,7 +9,6 @@ export class TagManager<T> {
         
         const currentTags = this.tags.get(item)!;
         
-        // Evita duplicados
         if (!currentTags.includes(tag)) {
             currentTags.push(tag);
         }

@@ -5,7 +5,6 @@ export class DependencyGraph<T> {
     addDependency(item: T, dependsOn: T): void {
         const currentDeps = this.graph.get(item) || [];
         
-        // Evitar duplicados
         if (!currentDeps.includes(dependsOn)) {
             currentDeps.push(dependsOn);
         }

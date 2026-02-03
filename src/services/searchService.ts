@@ -1,4 +1,3 @@
-// src/services/searchService.ts
 import { TasksList } from "./taskService.js";
 import { TasksClass } from "../models/task.js";
 import { assignmentService } from "./assignmentService.js";

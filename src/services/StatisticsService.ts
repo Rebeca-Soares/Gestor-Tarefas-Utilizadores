@@ -1,4 +1,3 @@
-// src/services/StatisticsService.ts
 import { UserList } from "./userService.js";
 import { TasksList } from "./taskService.js"; //
 import { TaskStatus } from "../utils/TaskStatus.js";

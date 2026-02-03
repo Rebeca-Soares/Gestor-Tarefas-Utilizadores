@@ -50,7 +50,7 @@ export function createTaskElement(task: TasksClass, onUpdate: () => void): HTMLL
     const statusIcon = task.status === TaskStatus.Blocked ? '<i class="bi bi-ban"></i> ' : '';
     const statusClass = `status-${TaskStatus[task.status].toLowerCase()}`;
 
-    // 3. CONSTRUÇÃO DO CARD
+    //CONSTRUÇÃO DO CARD
     const titleRow = document.createElement("div");
     titleRow.classList.add('title-row');
     titleRow.innerHTML = `
@@ -92,7 +92,7 @@ export function createTaskElement(task: TasksClass, onUpdate: () => void): HTMLL
         textContainer.appendChild(small);
     }
 
-    // 4. BOTÕES COM PERMISSÕES (Exercício 8)
+    // BOTÕES COM PERMISSÕES 
     
     const btnComment = document.createElement('button');
     btnComment.innerHTML = '<i class="bi bi-chat-left-dots"></i>';

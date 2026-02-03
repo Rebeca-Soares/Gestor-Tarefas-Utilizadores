@@ -83,7 +83,7 @@ export function renderUsers(users = UserList.getAll()): void {
             </div>
         `;
 
-        // --- LÓGICA DO WATCHER (DENTRO DO FOREACH) ---
+        // --- LÓGICA DO WATCHER ---
 
         const btnFollow = document.createElement('button');
         btnFollow.className = `btn-follow ${isFollowing ? 'active' : ''}`;
@@ -137,10 +137,10 @@ export function renderUsers(users = UserList.getAll()): void {
         deleteBtn.onclick = (e: MouseEvent) => { e.stopPropagation(); handleDeleteUser(u.id, e); };
 
         card.onclick = () => openUserModal(u);
-        listDiv.appendChild(card); // Adiciona o card completo à lista
+        listDiv.appendChild(card);
     });
 
-    updateFollowingList(); // Mantém o topo atualizado
+    updateFollowingList(); 
     updateDashboardStats();
 }
 

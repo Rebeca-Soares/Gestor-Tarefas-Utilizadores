@@ -7,7 +7,6 @@ export class SystemConfig {
         this.environment = env; 
     }
 
-    //metodo nativo do JS - getInfo()
     static getInfo(): {appName: string, version: string, environment:string} {
         return {
             appName: this.appName,

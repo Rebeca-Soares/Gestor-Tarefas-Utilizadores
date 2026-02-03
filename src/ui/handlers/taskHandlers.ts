@@ -20,7 +20,6 @@ let isSortedAscending = false;
 
 let isFavFilterActive = false;
 
-//ADICIONAR UMA NOVA TAREFA
 export function handleAddTask(): void {
     const title = input.value.trim();
     const category = categorySelect.value as Category;
@@ -145,7 +144,6 @@ export function setupStatFilters(): void {
 
     if (statExpired) {
         statExpired.onclick = () => {
-            // Usa o filtro de atrasadas
             const expired = TasksList.getAll().filter(t => deadlineService.getRelativeTime(t.deadline) === "Atrasada");
             renderTasks(expired);
         };

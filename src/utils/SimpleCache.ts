@@ -1,5 +1,3 @@
-// src/utils/SimpleCache.ts
-
 export class SimpleCache<K, T> {
 
     private cache: Map<K, T>;

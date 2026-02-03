@@ -67,12 +67,12 @@ export function renderTasks(tasks: TasksClass[] = taskService.getTasks()): void 
         openAddTaskModalBtn.style.display = podeCriar ? 'block' : 'none';
     }
 
-    // --- ATUALIZAÇÃO DA UI DE PAGINAÇÃO ---
+    // --- UI DE PAGINAÇÃO ---
     if (pageIndicator) {
         pageIndicator.textContent = `Página ${currentPage} de ${getTotalPages() || 1}`;
     }
 
-    // Desativa botões se estivermos nos limites
+    // Desativa botões se estiver nos limites
     if (prevPageBtn) prevPageBtn.disabled = (currentPage === 1);
     if (nextPageBtn) nextPageBtn.disabled = (currentPage >= getTotalPages() || getTotalPages() === 0);
 

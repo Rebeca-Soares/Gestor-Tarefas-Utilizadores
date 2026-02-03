@@ -7,7 +7,7 @@ export enum TaskStatus {
     Archived = 5
 }
 
-// Adiciona as etiquetas em português:
+// Adiciona nomes as etiquetas:
 export const StatusLabels: Record<TaskStatus, string> = {
     [TaskStatus.Created]: "Criada",
     [TaskStatus.Assigned]: "Atribuída",
