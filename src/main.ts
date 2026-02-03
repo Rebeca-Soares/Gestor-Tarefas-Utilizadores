@@ -1,19 +1,19 @@
-// 1. IMPORTS DE UI E COMPONENTES
+// UI E COMPONENTES
 import { renderTasks } from './ui/components/renderTask.js';
 import { renderUsers } from './ui/components/rederUsers.js';
 import "./ui/app.js";
 
-// 2. IMPORTS DE MODELOS
+// MODELOS
 import { UserClass } from './models/User.js';
 import { TasksClass } from './models/task.js';
 
-// 3. IMPORTS DE SERVIÇOS E CONFIGURAÇÃO
+// SERVIÇOS E CONFIGURAÇÃO
 import { UserList } from './services/userService.js';
 import { TasksList } from './services/taskService.js';
 import { SystemConfig } from './services/SystemConfig.js';
 import { BusinessRules } from "./services/BusinessRules.js";
 
-// 4. IMPORTS DE UTILITÁRIOS E SEGURANÇA
+// UTILITÁRIOS E SEGURANÇA
 import { EntityList } from "./utils/EntityList.js";
 import { SimpleCache } from "./utils/SimpleCache.js";
 import { TagManager } from "./utils/TagManager.js";
@@ -26,19 +26,18 @@ import { UserRole } from "./security/UserRole.js";
 import { Favorites } from "./utils/Favorites.js";
 import { Paginator } from "./utils/Paginator.js";
 import { WatcherSystem } from './utils/WatcherSystem.js';
+import { PriorityManager } from './utils/PriorityManager.js';
+import { RatingSystem } from './utils/RatingSystem.js';
+import { DependencyGraph } from './utils/DependencyGraph.js';
 
 
-
-// --- INICIALIZAÇÃO DA INTERFACE ---
 renderTasks(); 
 renderUsers();
 
-// --- EXPORTAÇÕES ---
+
 export { TasksList, TasksClass, UserList, UserClass };
 
-/**
- * IMPLEMENTAÇÃO DO FLUXO REAL - EXERCÍCIO 7
- */
+//Exercicio 7 - Guiados (Aula 5)
 function executarFluxoSistema() {
     SystemLogger.log("=== INICIANDO DEMONSTRAÇÃO DO SISTEMA ===");
 
@@ -64,77 +63,86 @@ function executarFluxoSistema() {
     SystemLogger.getLogs().forEach(entrada => console.log(entrada));
 }
 
-// --- TESTES DE GENERICS (GUIADOS E AUTÓNOMOS) ---
+//Exercicios Guiados (Aula 6)
+function executarExerciciosGuiados() {
+    console.log("\n--- EXERCÍCIOS GUIADOS ---");
 
-function executarTestesGenerics() {
-    console.log("\n=== TESTES DE GENERICS ===");
-
-    // 1. Instâncias Comuns para Testes
     const user1 = new UserClass(1, "Ana Silva", "ana@empresa.com", UserRole.ADMIN);
-    const user2 = new UserClass(2, "Pedro Santos", "pedro@empresa.com", UserRole.MEMBER);
-    const task1 = new TasksClass(10, "Finalizar Cache Genérica", "Estudo", PriorityRoles.HIGH, TaskStatus.InProgress);
+    const task1 = new TasksClass(10, "Finalizar Projeto", "Estudo", PriorityRoles.HIGH, TaskStatus.InProgress);
 
-    // 2. Teste EntityList (Exercicio 1 Guiado)
-    const userList = new EntityList<UserClass>();
-    userList.add(user1);
-    console.log("EntityList (User):", userList.getAll());
+    // Exercício 1: EntityList
+    console.log("Exercício 1: EntityList");
+    const userListGen = new EntityList<UserClass>();
+    userListGen.add(user1);
+    console.log("Lista Genérica (User):", userListGen.getAll());
 
-    // 3. Teste OBRIGATÓRIO SimpleCache (Exercicio 2 Guiado)
+    // Exercício 2: SimpleCache
+    console.log("Exercício 2: SimpleCache");
     const userCache = new SimpleCache<number, UserClass>();
     userCache.set(1, user1);
-    console.log("SimpleCache (User) - Chave 1:", userCache.get(1));
+    console.log("Cache (User) ID 1:", userCache.get(1));
 
-    const taskCache = new SimpleCache<number, TasksClass>();
-    taskCache.set(10, task1);
-    console.log("SimpleCache (Task) - Chave 10:", taskCache.get(10));
-
-    // 4. Teste TagManager (Exercicio 1 Autónomo)
-    const taskTagManager = new TagManager<TasksClass>();
-    taskTagManager.addTag(task1, 'urgente');
-    console.log("TagManager (Task):", taskTagManager.getTags(task1));
-
+    // Exercício 3: Favoritos
+    console.log("Exercício 3: Favoritos");
     const favUsers = new Favorites<UserClass>();
     favUsers.add(user1);
-    favUsers.add(user2);
-    favUsers.remove(user1);
-    console.log("Favoritos de Users (deve ter apenas user2):", favUsers.getAll());
+    console.log("User está nos favoritos?", favUsers.exists(user1));
 
-    // Favoritos de Tarefas
-    const favTasks = new Favorites<TasksClass>();
-    favTasks.add(task1);
-    console.log("Tarefa 1 existe nos favoritos?", favTasks.exists(task1));
-
-    const watcherSystem = new WatcherSystem<TasksClass, UserClass>();
-
-    const t1 = TasksList.getAll()[0]; 
-    const u1 = UserList.getAll()[0];
-    const u2 = UserList.getAll()[1];
-
-    watcherSystem.watch(t1, u1);
-    watcherSystem.watch(t1, u2);
-
-    console.log("Observadores da Tarefa 1:", watcherSystem.getWatchers(t1));
-
-}
-
-function executarTestePaginador() {
-    console.log("\n=== EXERCÍCIO 4: PAGINADOR GENÉRICO - Exercicios Guiados ===");
-
+    // Exercício 4: Paginador
+    console.log("Exercício 4: Paginador");
     const paginator = new Paginator();
-    
-    // Teste Obrigatório com UserList (importada do userService)
-    const page1 = paginator.paginate(UserList.getAll(), 1, 2);
-    const page2 = paginator.paginate(UserList.getAll(), 2, 2);
-
-    console.log("Página 1 (2 itens):", page1);
-    console.log("Página 2 (2 itens):", page2);
-    
-    // Teste bónus com Tarefas para provar que é genérico
-    const taskPage = paginator.paginate(TasksList.getAll(), 1, 3);
-    console.log("Página 1 de Tarefas (3 itens):", taskPage);
+    const page = paginator.paginate(UserList.getAll(), 1, 2);
+    console.log("Paginação (Página 1, tamanho 2):", page);
 }
 
-// Execução dos fluxos
+//Exercícios Autónomos (Aula 6) 
+function executarExerciciosAutonomos() {
+    console.log("--- EXERCÍCIOS AUTÓNOMOS ---");
+
+    const user1 = UserList.getAll()[0];
+    const task1 = TasksList.getAll()[0];
+
+    // Exercício A1: TagManager
+    console.log("Exercício A1: TagManager");
+    const taskTagManager = new TagManager<TasksClass>();
+    taskTagManager.addTag(task1, 'urgente');
+    console.log("Tags da Tarefa:", taskTagManager.getTags(task1));
+
+    // Exercício A2: WatcherSystem
+    console.log("Exercício A2: WatcherSystem");
+    const watcherSystem = new WatcherSystem<TasksClass, UserClass>();
+    if (task1 && user1) {
+        watcherSystem.watch(task1, user1);
+        console.log("Observadores da Tarefa:", watcherSystem.getWatchers(task1).map(u => u.name));
+    }
+
+    // Exercício A3: PriorityManager
+    console.log("Exercício A3: PriorityManager");
+    const priorityManager = new PriorityManager<TasksClass>();
+    if (task1) {
+        priorityManager.setPriority(task1, 5);
+        console.log("Prioridade da Tarefa:", priorityManager.getPriority(task1));
+    }
+
+    // Exercício A4: RatingSystem
+    console.log("Exercício A4: RatingSystem");
+    const ratingSystem = new RatingSystem<TasksClass>();
+    if (task1) {
+        ratingSystem.rate(task1, 5);
+        ratingSystem.rate(task1, 4);
+        console.log("Média de Rating da Tarefa:", ratingSystem.getAverage(task1));
+    }
+
+    // Exercício A5: DependencyGraph
+    console.log("Exercício A5: DependencyGraph");
+    const depGraph = new DependencyGraph<TasksClass>();
+    const task2 = TasksList.getAll()[1];
+    if (task1 && task2) {
+        depGraph.addDependency(task2, task1);
+        console.log(`"${task2.title}" depende de "${task1.title}"?`, depGraph.hasDependencies(task2));
+    }
+}
+
 executarFluxoSistema();
-executarTestesGenerics();
-executarTestePaginador(); 
+executarExerciciosGuiados();
+executarExerciciosAutonomos();

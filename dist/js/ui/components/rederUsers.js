@@ -1,14 +1,29 @@
 import { UserList, currentUser, loginAs } from "../../services/userService.js";
 import { getInitials } from "../../utils/initials.js";
 import { openUserModal } from "../modal/userModal.js";
-import { listDiv, addBnt, filterActives, filterDesactive, searchInputUser, orderNameUser, info } from "../dom/userDom.js";
+import { listDiv, addBnt, contadorAtivos, contadorDesactiveSpan, contadorTotalUsers, filterActives, filterDesactive, contadorPercentagemUsers, searchInputUser, orderNameUser, info } from "../dom/userDom.js";
 import { handleAddUser, handleSearchUsers, handleOrderUsers, handleDeleteUser, handleToggleUserStatus, showPopoverError } from "../handlers/userHandlers.js";
+import { statisticsService } from "../../services/StatisticsService.js";
 import { assignmentService } from "../../services/assignmentService.js";
 import { renderTasks } from "./renderTask.js";
 import { UserRole } from "../../security/UserRole.js";
 import { WatcherSystem } from "../../utils/WatcherSystem.js";
 import { followingListDiv } from "../dom/userDom.js";
 const userWatcher = new WatcherSystem();
+export function updateDashboardStats() {
+    const total = statisticsService.getTotalUsers();
+    const ativos = statisticsService.getActiveUsersCount();
+    const inativos = total - ativos;
+    const percentagem = statisticsService.getActivePercentage();
+    if (contadorTotalUsers)
+        contadorTotalUsers.textContent = total.toString();
+    if (contadorAtivos)
+        contadorAtivos.textContent = ativos.toString();
+    if (contadorDesactiveSpan)
+        contadorDesactiveSpan.textContent = inativos.toString();
+    if (contadorPercentagemUsers)
+        contadorPercentagemUsers.textContent = `${percentagem}%`;
+}
 export function showMessage(message, type) {
     if (info) {
         info.textContent = message;
@@ -101,6 +116,7 @@ export function renderUsers(users = UserList.getAll()) {
         listDiv.appendChild(card); // Adiciona o card completo à lista
     });
     updateFollowingList(); // Mantém o topo atualizado
+    updateDashboardStats();
 }
 // --- VINCULAÇÃO DE EVENTOS AOS HANDLERS ---
 // Adicionar Utilizador

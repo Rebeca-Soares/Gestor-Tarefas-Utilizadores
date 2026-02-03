@@ -19,6 +19,19 @@ import { UserClass } from "../../models/User.js";
 
 const userWatcher = new WatcherSystem<UserClass, UserClass>();
 
+export function updateDashboardStats(): void {
+    const total = statisticsService.getTotalUsers();
+    const ativos = statisticsService.getActiveUsersCount();
+    const inativos = total - ativos;
+    const percentagem = statisticsService.getActivePercentage();
+
+    if (contadorTotalUsers) contadorTotalUsers.textContent = total.toString();
+    if (contadorAtivos) contadorAtivos.textContent = ativos.toString();
+    if (contadorDesactiveSpan) contadorDesactiveSpan.textContent = inativos.toString();
+    if (contadorPercentagemUsers) contadorPercentagemUsers.textContent = `${percentagem}%`;
+}
+
+
 export function showMessage(message: string, type: 'error' | 'success') {
     if (info) {
         info.textContent = message;
@@ -128,6 +141,7 @@ export function renderUsers(users = UserList.getAll()): void {
     });
 
     updateFollowingList(); // Mantém o topo atualizado
+    updateDashboardStats();
 }
 
 // --- VINCULAÇÃO DE EVENTOS AOS HANDLERS ---
