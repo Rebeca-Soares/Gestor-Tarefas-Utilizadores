@@ -4,8 +4,7 @@
 - Nome: Rebeca Luiza Soares Cerqueira - Aluno nº 224
 
 ## Repositório GitHub
-- [[Link do repositório](https://github.com/Rebeca-Soares/Gestor-Tarefas-Utilizadores)]
-- [[Link do GitHub Pages](https://rebeca-soares.github.io/Gestor-Tarefas-Utilizadores/)] 
+- [[Link do repositório](https://github.com/Rebeca-Soares/Gestor-Tarefas-Utilizadores/tree/static-generic-dev)]
 
 ## Descrição
 Aplicação web de gestão de tarefas que permite:
